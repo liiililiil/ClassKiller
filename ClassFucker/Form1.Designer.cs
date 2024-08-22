@@ -33,12 +33,12 @@
             label1 = new Label();
             label2 = new Label();
             netSupportInfo = new Label();
-            ClassMInfo = new Label();
+            classMinfo = new Label();
             tableLayoutPanel2 = new TableLayoutPanel();
-            button5 = new Button();
-            button1 = new Button();
-            button2 = new Button();
-            button3 = new Button();
+            FastSc = new Button();
+            AllSc = new Button();
+            Isolation = new Button();
+            Restoration = new Button();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             SuspendLayout();
@@ -52,7 +52,7 @@
             tableLayoutPanel1.Controls.Add(label1, 0, 6);
             tableLayoutPanel1.Controls.Add(label2, 0, 3);
             tableLayoutPanel1.Controls.Add(netSupportInfo, 0, 7);
-            tableLayoutPanel1.Controls.Add(ClassMInfo, 0, 4);
+            tableLayoutPanel1.Controls.Add(classMinfo, 0, 4);
             tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 1);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
@@ -114,16 +114,16 @@
             netSupportInfo.TabIndex = 3;
             netSupportInfo.Text = "알수없음";
             // 
-            // ClassMInfo
+            // classMinfo
             // 
-            ClassMInfo.AutoSize = true;
-            ClassMInfo.Dock = DockStyle.Fill;
-            ClassMInfo.Location = new Point(3, 202);
-            ClassMInfo.Name = "ClassMInfo";
-            ClassMInfo.Size = new Size(366, 20);
-            ClassMInfo.TabIndex = 4;
-            ClassMInfo.Text = "알수없음";
-            ClassMInfo.TextAlign = ContentAlignment.MiddleLeft;
+            classMinfo.AutoSize = true;
+            classMinfo.Dock = DockStyle.Fill;
+            classMinfo.Location = new Point(3, 202);
+            classMinfo.Name = "classMinfo";
+            classMinfo.Size = new Size(366, 20);
+            classMinfo.TabIndex = 4;
+            classMinfo.Text = "알수없음";
+            classMinfo.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // tableLayoutPanel2
             // 
@@ -134,10 +134,10 @@
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333435F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
-            tableLayoutPanel2.Controls.Add(button5, 1, 0);
-            tableLayoutPanel2.Controls.Add(button1, 1, 2);
-            tableLayoutPanel2.Controls.Add(button2, 3, 0);
-            tableLayoutPanel2.Controls.Add(button3, 3, 2);
+            tableLayoutPanel2.Controls.Add(FastSc, 1, 0);
+            tableLayoutPanel2.Controls.Add(AllSc, 1, 2);
+            tableLayoutPanel2.Controls.Add(Isolation, 3, 0);
+            tableLayoutPanel2.Controls.Add(Restoration, 3, 2);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
             tableLayoutPanel2.Location = new Point(3, 42);
@@ -149,47 +149,49 @@
             tableLayoutPanel2.Size = new Size(366, 94);
             tableLayoutPanel2.TabIndex = 5;
             // 
-            // button5
+            // FastSc
             // 
-            button5.AutoSize = true;
-            button5.Dock = DockStyle.Fill;
-            button5.Location = new Point(71, 3);
-            button5.Name = "button5";
-            button5.Size = new Size(74, 34);
-            button5.TabIndex = 0;
-            button5.Text = "빠른 탐색";
-            button5.UseVisualStyleBackColor = true;
+            FastSc.AutoSize = true;
+            FastSc.Dock = DockStyle.Fill;
+            FastSc.Location = new Point(71, 3);
+            FastSc.Name = "FastSc";
+            FastSc.Size = new Size(74, 34);
+            FastSc.TabIndex = 0;
+            FastSc.Text = "빠른 탐색";
+            FastSc.UseVisualStyleBackColor = true;
+            FastSc.Click += FastSc_Click;
             // 
-            // button1
+            // AllSc
             // 
-            button1.AutoSize = true;
-            button1.Dock = DockStyle.Fill;
-            button1.Location = new Point(71, 56);
-            button1.Name = "button1";
-            button1.Size = new Size(74, 35);
-            button1.TabIndex = 1;
-            button1.Text = "전체 탐색";
-            button1.UseVisualStyleBackColor = true;
+            AllSc.AutoSize = true;
+            AllSc.Dock = DockStyle.Fill;
+            AllSc.Location = new Point(71, 56);
+            AllSc.Name = "AllSc";
+            AllSc.Size = new Size(74, 35);
+            AllSc.TabIndex = 1;
+            AllSc.Text = "전체 탐색";
+            AllSc.UseVisualStyleBackColor = true;
+            AllSc.Click += AllSc_Click;
             // 
-            // button2
+            // Isolation
             // 
-            button2.Dock = DockStyle.Fill;
-            button2.Location = new Point(219, 3);
-            button2.Name = "button2";
-            button2.Size = new Size(74, 34);
-            button2.TabIndex = 2;
-            button2.Text = "격리";
-            button2.UseVisualStyleBackColor = true;
+            Isolation.Dock = DockStyle.Fill;
+            Isolation.Location = new Point(219, 3);
+            Isolation.Name = "Isolation";
+            Isolation.Size = new Size(74, 34);
+            Isolation.TabIndex = 2;
+            Isolation.Text = "격리";
+            Isolation.UseVisualStyleBackColor = true;
             // 
-            // button3
+            // Restoration
             // 
-            button3.Dock = DockStyle.Fill;
-            button3.Location = new Point(219, 56);
-            button3.Name = "button3";
-            button3.Size = new Size(74, 35);
-            button3.TabIndex = 3;
-            button3.Text = "복구";
-            button3.UseVisualStyleBackColor = true;
+            Restoration.Dock = DockStyle.Fill;
+            Restoration.Location = new Point(219, 56);
+            Restoration.Name = "Restoration";
+            Restoration.Size = new Size(74, 35);
+            Restoration.TabIndex = 3;
+            Restoration.Text = "복구";
+            Restoration.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -212,16 +214,16 @@
         private TableLayoutPanel tableLayoutPanel1;
         private Label label3;
         private Label label4;
-        private Button button2;
-        private Button button3;
+        private Button Isolation;
+        private Button Restoration;
         private Button button4;
         private ProgressBar progressBar1;
         private Label label1;
         private Label label2;
         private Label netSupportInfo;
-        private Label ClassMInfo;
+        private Label classMinfo;
         private TableLayoutPanel tableLayoutPanel2;
-        private Button button5;
-        private Button button1;
+        private Button FastSc;
+        private Button AllSc;
     }
 }
