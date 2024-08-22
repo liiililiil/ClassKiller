@@ -37,6 +37,8 @@
             tableLayoutPanel2 = new TableLayoutPanel();
             button5 = new Button();
             button1 = new Button();
+            button2 = new Button();
+            button3 = new Button();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             SuspendLayout();
@@ -69,7 +71,6 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
             tableLayoutPanel1.Size = new Size(372, 342);
             tableLayoutPanel1.TabIndex = 0;
-            tableLayoutPanel1.Paint += tableLayoutPanel1_Paint;
             // 
             // progressBar1
             // 
@@ -135,6 +136,8 @@
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
             tableLayoutPanel2.Controls.Add(button5, 1, 0);
             tableLayoutPanel2.Controls.Add(button1, 1, 2);
+            tableLayoutPanel2.Controls.Add(button2, 3, 0);
+            tableLayoutPanel2.Controls.Add(button3, 3, 2);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
             tableLayoutPanel2.Location = new Point(3, 42);
@@ -145,7 +148,6 @@
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 42.6303825F));
             tableLayoutPanel2.Size = new Size(366, 94);
             tableLayoutPanel2.TabIndex = 5;
-            tableLayoutPanel2.Paint += tableLayoutPanel2_Paint;
             // 
             // button5
             // 
@@ -168,6 +170,26 @@
             button1.TabIndex = 1;
             button1.Text = "전체 탐색";
             button1.UseVisualStyleBackColor = true;
+            // 
+            // button2
+            // 
+            button2.Dock = DockStyle.Fill;
+            button2.Location = new Point(219, 3);
+            button2.Name = "button2";
+            button2.Size = new Size(74, 34);
+            button2.TabIndex = 2;
+            button2.Text = "격리";
+            button2.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            button3.Dock = DockStyle.Fill;
+            button3.Location = new Point(219, 56);
+            button3.Name = "button3";
+            button3.Size = new Size(74, 35);
+            button3.TabIndex = 3;
+            button3.Text = "복구";
+            button3.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
