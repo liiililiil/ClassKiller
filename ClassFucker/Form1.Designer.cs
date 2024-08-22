@@ -37,8 +37,8 @@
             tableLayoutPanel2 = new TableLayoutPanel();
             FastSc = new Button();
             AllSc = new Button();
-            Isolation = new Button();
-            Restoration = new Button();
+            _Restoration = new Button();
+            _isolation = new Button();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             SuspendLayout();
@@ -136,8 +136,8 @@
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
             tableLayoutPanel2.Controls.Add(FastSc, 1, 0);
             tableLayoutPanel2.Controls.Add(AllSc, 1, 2);
-            tableLayoutPanel2.Controls.Add(Isolation, 3, 0);
-            tableLayoutPanel2.Controls.Add(Restoration, 3, 2);
+            tableLayoutPanel2.Controls.Add(_Restoration, 3, 2);
+            tableLayoutPanel2.Controls.Add(_isolation, 3, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
             tableLayoutPanel2.Location = new Point(3, 42);
@@ -173,25 +173,27 @@
             AllSc.UseVisualStyleBackColor = true;
             AllSc.Click += AllSc_Click;
             // 
-            // Isolation
+            // _Restoration
             // 
-            Isolation.Dock = DockStyle.Fill;
-            Isolation.Location = new Point(219, 3);
-            Isolation.Name = "Isolation";
-            Isolation.Size = new Size(74, 34);
-            Isolation.TabIndex = 2;
-            Isolation.Text = "격리";
-            Isolation.UseVisualStyleBackColor = true;
+            _Restoration.Dock = DockStyle.Fill;
+            _Restoration.Location = new Point(219, 56);
+            _Restoration.Name = "_Restoration";
+            _Restoration.Size = new Size(74, 35);
+            _Restoration.TabIndex = 3;
+            _Restoration.Text = "복구";
+            _Restoration.UseVisualStyleBackColor = true;
+            _Restoration.Click += _Restoration_Click;
             // 
-            // Restoration
+            // _isolation
             // 
-            Restoration.Dock = DockStyle.Fill;
-            Restoration.Location = new Point(219, 56);
-            Restoration.Name = "Restoration";
-            Restoration.Size = new Size(74, 35);
-            Restoration.TabIndex = 3;
-            Restoration.Text = "복구";
-            Restoration.UseVisualStyleBackColor = true;
+            _isolation.Dock = DockStyle.Fill;
+            _isolation.Location = new Point(219, 3);
+            _isolation.Name = "_isolation";
+            _isolation.Size = new Size(74, 34);
+            _isolation.TabIndex = 4;
+            _isolation.Text = "격리";
+            _isolation.UseVisualStyleBackColor = true;
+            _isolation.Click += _isolation_Click;
             // 
             // Form1
             // 
@@ -215,7 +217,7 @@
         private Label label3;
         private Label label4;
         private Button Isolation;
-        private Button Restoration;
+        private Button _Restoration;
         private Button button4;
         private ProgressBar progressBar1;
         private Label label1;
@@ -225,5 +227,6 @@
         private TableLayoutPanel tableLayoutPanel2;
         private Button FastSc;
         private Button AllSc;
+        private Button _isolation;
     }
 }
