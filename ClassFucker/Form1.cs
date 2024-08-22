@@ -15,19 +15,18 @@ namespace ClassFucker
         public Form1()
         {
             InitializeComponent();
-            // Fast scan to find ClassM and NetSupport
             ClassMScan();
             NetSupportScan();
         }
 
-        // Fast scan functions
+        // 빠른 스캔 함수
         public void ClassMScan()
         {
-            if (Directory.Exists(@"C:\Program Files (x86)\ClassM")) // Check known path
+            if (Directory.Exists(@"C:\Program Files (x86)\ClassM")) // 알려진 주소 확인
                 SetClassMPath(@"C:\Program Files (x86)\ClassM\hscagent.exe");
             else
             {
-                // Search for the process if not found in the known path
+                // 프로세스를 이용해 탐색
                 Process[] process = Process.GetProcessesByName("hscagent");
 
                 if (process.Length == 0)
@@ -36,17 +35,16 @@ namespace ClassFucker
                     SetClassMPath(process[0].MainModule.FileName);
             }
 
-            // Update progress
             progressBar1.Value += 50;
         }
 
         public void NetSupportScan()
         {
-            if (Directory.Exists(@"C:\Program Files (x86)\NetSupport\NetSupport School")) // Check known path
+            if (Directory.Exists(@"C:\Program Files (x86)\NetSupport\NetSupport School")) // 알려진 주소 확인
                 SetNetSupportPath(@"C:\Program Files (x86)\NetSupport\NetSupport School\client32.exe");
             else
             {
-                // Search for the process if not found in the known path
+                // 프로세스를 이용해 탐색
                 Process[] process = Process.GetProcessesByName("client32");
 
                 if (process.Length == 0)
@@ -55,13 +53,11 @@ namespace ClassFucker
                     SetNetSupportPath(process[0].MainModule.FileName);
             }
 
-            // Update progress
             progressBar1.Value += 50;
         }
 
 
-
-        // Update path and display in the label
+        // 경로, 라벨 수정 함수 //
         public void SetNetSupportPath(string path)
         {
             netSupportPath = Path.GetDirectoryName(path);
@@ -76,17 +72,9 @@ namespace ClassFucker
 
         private void FastSc_Click(object sender, EventArgs e)
         {
-            // Start fast scan
             progressBar1.Value = 0;
             ClassMScan();
             NetSupportScan();
-        }
-
-
-        private void AllSc_Click(object sender, EventArgs e)
-        {
-            AllScanClassM();
-            AllScanNetSupportSchool();
         }
     }
 }
