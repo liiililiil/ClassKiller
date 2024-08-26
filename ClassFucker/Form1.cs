@@ -154,10 +154,10 @@ namespace ClassFucker
                 ProcessKill("mvnc");
                 ProcessKill("SysCtrl");
                 ProcessKill("hscagent");
-                await XCopy(classMPath, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ClassM"));
+                await XCopy(classMPath, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ClassM"), loglabel);
                 DeleteDirectoryAsync(classMPath, loglabel);
                 File.WriteAllText(Path.Combine(classMPath, "ClassMIsolation.txt"), "이것은 ClassM이 제거됬다는 것을 증명합니다. 삭제하지 말아주세요.");
-                loglabel.Text += $"ClassM이 성공적으로 격리됨 \n";
+                loglabel.Text += $"ClassM 작업 완료 \n";
             }
             else if (!string.IsNullOrEmpty(classMPath) && File.Exists(Path.Combine(classMPath, "ClassMIsolation.txt")))
             {
@@ -181,10 +181,10 @@ namespace ClassFucker
                 ProcessKill("ClassicStartMenu");
                 ProcessKill("nspowershell");
                 ProcessKill("NSClientTB");
-                await XCopy(netSupportPath, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NetSupport"));
+                await XCopy(netSupportPath, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NetSupport"), loglabel);
                 DeleteDirectoryAsync(netSupportPath, loglabel);
                 File.WriteAllText(Path.Combine(netSupportPath, "NetSupportPathIsolation.txt"), "이것은 NetSupportPath이 제거됬다는 것을 증명합니다. 삭제하지 말아주세요.");
-                loglabel.Text += $"NetSupport가 성공적으로 격리됨 \n";
+                loglabel.Text += $"NetSupport 작업 완료 \n";
             }
             else if (!string.IsNullOrEmpty(netSupportPath) && File.Exists(Path.Combine(netSupportPath, "NetSupportPathIsolation.txt")))
                 loglabel.Text += $"NetSupport가 격리된 흔적이 발견되 건너뜀 \n";
@@ -193,7 +193,7 @@ namespace ClassFucker
 
             progressBar1.Value = 100;
 
-            loglabel.Text += "격리가 완료됨";
+            loglabel.Text += "작업이 완료됨";
         }
         public async Task Restoration()
         {
@@ -205,14 +205,14 @@ namespace ClassFucker
                 loglabel.Text += "ClassM이 격리된 흔적이 발견되지 않아 건너뜀 \n";
             else
             {
-                await XCopy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ClassM"), classMPath);
+                await XCopy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ClassM"), classMPath, loglabel);
                 ProcessStart(Path.Combine(classMPath, "ClassM_Client.exe"));
                 ProcessStart(Path.Combine(classMPath, "ClassM_Client_Service.exe"));
                 ProcessStart(Path.Combine(classMPath, "mvnc.exe"));
                 ProcessStart(Path.Combine(classMPath, "SysCtrl.exe"));
                 ProcessStart(Path.Combine(classMPath, "hscagent.exe"));
                 File.Delete(Path.Combine(classMPath, "ClassMIsolation.txt"));
-                loglabel.Text += $"ClassM이 성공적으로 복구됨 \n";
+                loglabel.Text += $"ClassM 작업 완료 \n";
             }
 
             progressBar1.Value = 50;
@@ -224,7 +224,7 @@ namespace ClassFucker
                 loglabel.Text += $"NetSupport가 격리된 흔적이 발견되지 않아 건너뜀 \n";
             else
             {
-                await XCopy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NetSupport"), netSupportPath);
+                await XCopy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NetSupport"), netSupportPath, loglabel);
                 ProcessStart(Path.Combine(netSupportPath, "client32.exe"));
                 ProcessStart(Path.Combine(netSupportPath, "StudentUI.exe"));
                 ProcessStart(Path.Combine(netSupportPath, "NSToast.exe"));
@@ -232,11 +232,11 @@ namespace ClassFucker
                 ProcessStart(Path.Combine(netSupportPath, "nspowershell.exe"));
                 ProcessStart(Path.Combine(netSupportPath, "NSClientTB.exe"));
                 File.Delete(Path.Combine(netSupportPath, "NetSupportPathIsolation.txt"));
-                loglabel.Text += $"NetSupport가 성공적으로 복구됨 \n";
+                loglabel.Text += $"NetSupport 작업 완료 \n";
             }
             progressBar1.Value = 100;
 
-            loglabel.Text += "복구 완료됨";
+            loglabel.Text += "작업 완료됨";
 
         }
 
@@ -360,10 +360,21 @@ namespace ClassFucker
         }
         */
 
-        static async Task XCopy(string sourcePath, string destinationPath)
+        static async Task XCopy(string sourcePath, string destinationPath,Label loglabel)
         {
+            if (!Directory.Exists(sourcePath))
+            {
+                loglabel.Text += $"Fatal Error : {sourcePath}폴더가 없습니다. 복사작업이 취소되었습니다! \n";
+                return;
+            }
 
-            Task task = Task.Run(() => CopyDirectory(sourcePath, destinationPath));
+            if (!Directory.Exists(destinationPath))
+            {
+                loglabel.Text += $"Fatal Error : {destinationPath}폴더가 없습니다. 복사작업이 취소되었습니다! \n";
+                return;
+            }
+
+            Task task = Task.Run(() => CopyDirectory(sourcePath, destinationPath, loglabel));
 
             // 모든 Task 완료 대기
             await Task.WhenAll(task);
@@ -437,18 +448,20 @@ namespace ClassFucker
                 }
             });
         }
-        static void CopyDirectory(string sourceDir, string destDir)
+        static void CopyDirectory(string sourceDir, string destDir,Label loglabel)
         {
             // 소스와 목적지 디렉토리가 존재하지 않는 경우 예외 발생
             if (!Directory.Exists(sourceDir))
             {
-                throw new DirectoryNotFoundException($"Source directory not found: {sourceDir}");
+                loglabel.Text += $"Fatal Error : {sourceDir}폴더가 없습니다. 복사작업이 취소되었습니다! \n";
+                return;
             }
 
             // 목적지 디렉토리 생성
             if (!Directory.Exists(destDir))
             {
-                Directory.CreateDirectory(destDir);
+                loglabel.Text += $"Fatal Error : {destDir}폴더가 없습니다. 복사작업이 취소되었습니다! \n";
+                return;
             }
 
             // 파일 복사
@@ -469,7 +482,7 @@ namespace ClassFucker
             foreach (var dirPath in Directory.GetDirectories(sourceDir))
             {
                 string destDirPath = Path.Combine(destDir, Path.GetFileName(dirPath));
-                CopyDirectory(dirPath, destDirPath);
+                CopyDirectory(dirPath, destDirPath,loglabel);
             }
         }
 
