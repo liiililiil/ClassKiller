@@ -9,7 +9,7 @@ namespace ClassFucker
     public partial class Form1 : Form
     {
 
-
+        private static bool callstop = false;
         private string classMPath;
         private string netSupportPath;
 
@@ -17,16 +17,16 @@ namespace ClassFucker
         {
 
             InitializeComponent();
-            // 기본 스캔 실행 (비동기 처리 고려)
-            ClassMScan();
-            NetSupportScan();
+            FastScan();
         }
 
 
         ////// 빠른 스캔 함수들 //////
-        public void ClassMScan()
+        public void FastScan()
         {
+            callstop = true;
             classMPath = null;
+            loglabel.Text = "ClassM 빠른 탐색중..";
             if (Directory.Exists(@"C:\Program Files (x86)\ClassM")) // 알려진 주소 확인
                 SetClassMPath(@"C:\Program Files (x86)\ClassM\hscagent.exe");
             else
@@ -41,11 +41,9 @@ namespace ClassFucker
             }
 
             progressBar1.Value += 50;
-        }
 
-        public void NetSupportScan()
-        {
             netSupportPath = null;
+            loglabel.Text = "NetSupport 빠른 탐색중..";
             if (Directory.Exists(@"C:\Program Files (x86)\NetSupport\NetSupport School")) // 알려진 주소 확인
                 SetNetSupportPath(@"C:\Program Files (x86)\NetSupport\NetSupport School\client32.exe");
             else
@@ -60,23 +58,21 @@ namespace ClassFucker
             }
 
             progressBar1.Value += 50;
+            loglabel.Text = "빠른 탐색 완료됨";
         }
 
         ////// 전체 스캔 관련 함수들 //////
-        public async Task AllClassMScan()
+        public async Task AllScan()
         {
             classMPath = null;
-            string result = await DFSFolderFind("ClassM", progressBar1);
+            string result = await DFSFolderFind("ClassM", progressBar1, loglabel);
             if (result == null)
                 classMinfo.Text = "발견되지않음";
             else
                 SetClassMPath(Path.Combine(result, "hscagent.exe"));
-        }
 
-        public async Task AllNetSupportScanAsync()
-        {
             netSupportPath = null;
-            string result = await DFSFolderFind("NetSupport School", progressBar1);
+            result = await DFSFolderFind("NetSupport School", progressBar1, loglabel);
             if (result == null)
                 netSupportInfo.Text = "발견되지않음";
             else
@@ -84,8 +80,9 @@ namespace ClassFucker
         }
 
         // 너비 우선 탐색으로 파일 찾기
-        static async Task<string> DFSFolderFind(string targetFolderName, ProgressBar progressBar)
+        static async Task<string> DFSFolderFind(string targetFolderName, ProgressBar progressBar, Label loglabel)
         {
+            callstop = false;
             Queue<string> directoriesToSearch = new Queue<string>();
             int totalDirectories = 0;
             int processedDirectories = 0;
@@ -105,6 +102,14 @@ namespace ClassFucker
                 string currentDirectory = directoriesToSearch.Dequeue();
                 processedDirectories++;
                 progressBar.Value = (int)((double)processedDirectories / totalDirectories * 100);
+                loglabel.Text = $"{targetFolderName}를 찾는중 : {currentDirectory}";
+
+                if (callstop)
+                {
+                    callstop = false;
+                    loglabel.Text = "빠른탐색 진행으로 전체 탐색이 중단됨";
+                    return null;
+                }
 
 
                 try
@@ -117,6 +122,7 @@ namespace ClassFucker
                         if (Path.GetFileName(directory).Equals(targetFolderName, StringComparison.OrdinalIgnoreCase))
                         {
                             return directory;
+                            loglabel.Text = $"{targetFolderName} 가 발견됨! {directory}";
                         }
                         directoriesToSearch.Enqueue(directory);
                         totalDirectories++;
@@ -128,17 +134,20 @@ namespace ClassFucker
                 }
             }
 
+
             return null;
+
         }
 
 
         ////// 처리 함수들 //////
         public async Task isolation() //격리
         {
+            loglabel.Text = "";
             progressBar1.Value = 0;
 
             //ClassM 부분
-            if (!string.IsNullOrEmpty(classMPath))
+            if (!string.IsNullOrEmpty(classMPath) && !File.Exists(Path.Combine(classMPath, "ClassMIsolation.txt")))
             {
                 ProcessKill("ClassM_Client");
                 ProcessKill("ClassM_Client_Service");
@@ -146,15 +155,25 @@ namespace ClassFucker
                 ProcessKill("SysCtrl");
                 ProcessKill("hscagent");
                 await XCopy(classMPath, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ClassM"));
+                DeleteDirectoryAsync(classMPath, loglabel);
                 File.WriteAllText(Path.Combine(classMPath, "ClassMIsolation.txt"), "이것은 ClassM이 제거됬다는 것을 증명합니다. 삭제하지 말아주세요.");
+                loglabel.Text += $"ClassM이 성공적으로 격리됨 \n";
             }
-            else if (File.Exists(Path.Combine(classMPath, "ClassMIsolation.txt")))
-                MessageBox.Show("ClassM이 격리된 흔적이 발견되어 격리가 취소되었습니다.");
+            else if (!string.IsNullOrEmpty(classMPath) && File.Exists(Path.Combine(classMPath, "ClassMIsolation.txt")))
+            {
+                loglabel.Text += $"ClassM이 격리된 흔적이 발견되 건너뜀 \n";
+            }
+
+            else
+            {
+                loglabel.Text += $"ClassM이 없어 건너뜀 \n";
+            }
+
 
             progressBar1.Value = 50;
 
             //NetSupport부분
-            if (!string.IsNullOrEmpty(netSupportPath))
+            if (!string.IsNullOrEmpty(netSupportPath) && !File.Exists(Path.Combine(netSupportPath, "NetSupportPathIsolation.txt")))
             {
                 ProcessKill("client32");
                 ProcessKill("StudentUI");
@@ -162,21 +181,28 @@ namespace ClassFucker
                 ProcessKill("ClassicStartMenu");
                 ProcessKill("nspowershell");
                 ProcessKill("NSClientTB");
-                await XCopy(classMPath, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NetSupport"));
+                await XCopy(netSupportPath, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NetSupport"));
+                DeleteDirectoryAsync(netSupportPath, loglabel);
                 File.WriteAllText(Path.Combine(netSupportPath, "NetSupportPathIsolation.txt"), "이것은 NetSupportPath이 제거됬다는 것을 증명합니다. 삭제하지 말아주세요.");
+                loglabel.Text += $"NetSupport가 성공적으로 격리됨 \n";
             }
-            else if (File.Exists(Path.Combine(netSupportPath, "NetSupportPathIsolation.txt")))
-                MessageBox.Show("NetSupport이 격리된 흔적이 발견되어 격리가 취소되었습니다.");
+            else if (!string.IsNullOrEmpty(netSupportPath) && File.Exists(Path.Combine(netSupportPath, "NetSupportPathIsolation.txt")))
+                loglabel.Text += $"NetSupport가 격리된 흔적이 발견되 건너뜀 \n";
+            else
+                loglabel.Text += $"NetSupport가 없어 건너뜀 \n";
 
             progressBar1.Value = 100;
 
-            MessageBox.Show("격리가 완료되었습니다.");
+            loglabel.Text += "격리가 완료됨";
         }
         public async Task Restoration()
         {
+            loglabel.Text = "";
             progressBar1.Value = 0;
-            if (!File.Exists(Path.Combine(classMPath, "ClassMIsolation.txt")))
-                MessageBox.Show("ClassM이 격리된 흔적이 발견되지않아 복구가 취소되었습니다.");
+            if (string.IsNullOrEmpty(classMPath))
+                loglabel.Text += "ClassM이 없어 건너뜀 \n";
+            else if (!File.Exists(Path.Combine(classMPath, "ClassMIsolation.txt")))
+                loglabel.Text += "ClassM이 격리된 흔적이 발견되지 않아 건너뜀 \n";
             else
             {
                 await XCopy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ClassM"), classMPath);
@@ -186,13 +212,16 @@ namespace ClassFucker
                 ProcessStart(Path.Combine(classMPath, "SysCtrl.exe"));
                 ProcessStart(Path.Combine(classMPath, "hscagent.exe"));
                 File.Delete(Path.Combine(classMPath, "ClassMIsolation.txt"));
+                loglabel.Text += $"ClassM이 성공적으로 복구됨 \n";
             }
 
             progressBar1.Value = 50;
 
             //NetSupport부분
-            if (!File.Exists(Path.Combine(netSupportPath, "NetSupportPathIsolation.txt")))
-                MessageBox.Show("NetSupport이 격리된 흔적이 발견되지않아 복구가 취소되었습니다.");
+            if (string.IsNullOrEmpty(netSupportPath))
+                loglabel.Text += $"NetSupport가 없어 건너뜀 \n";
+            else if (!File.Exists(Path.Combine(netSupportPath, "NetSupportPathIsolation.txt")))
+                loglabel.Text += $"NetSupport가 격리된 흔적이 발견되지 않아 건너뜀 \n";
             else
             {
                 await XCopy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NetSupport"), netSupportPath);
@@ -203,10 +232,11 @@ namespace ClassFucker
                 ProcessStart(Path.Combine(netSupportPath, "nspowershell.exe"));
                 ProcessStart(Path.Combine(netSupportPath, "NSClientTB.exe"));
                 File.Delete(Path.Combine(netSupportPath, "NetSupportPathIsolation.txt"));
+                loglabel.Text += $"NetSupport가 성공적으로 복구됨 \n";
             }
             progressBar1.Value = 100;
 
-            MessageBox.Show("복구가 완료되었습니다.");
+            loglabel.Text += "복구 완료됨";
 
         }
 
@@ -218,11 +248,14 @@ namespace ClassFucker
 
                 foreach (Process process in processes)
                 {
+                    loglabel.Text += $"{name} (이)가 종료됨 \n";
                     process.Kill();
+
                 }
 
                 if (processes.Length == 0)
                 {
+                    loglabel.Text += $"{name} (이)가 종료되지않음 \n";
                 }
             }
             catch (Exception ex)
@@ -236,12 +269,10 @@ namespace ClassFucker
 
             if (File.Exists(name))
             {
-                // ProcessStartInfo 객체를 생성하여 실행할 파일과 관련된 정보를 설정합니다.
-                ProcessStartInfo startInfo = new ProcessStartInfo
-                {
-                    FileName = name,
-                    UseShellExecute = true // 셸을 통해 파일을 실행합니다.
-                };
+                Process.Start(name);
+                loglabel.Text += $"{name}(을)를 실행함 \n";
+            } else {
+                loglabel.Text += $"{name} (이)가 실행되지않음 \n";
             }
 
         }
@@ -287,6 +318,8 @@ namespace ClassFucker
             }
         }
         */
+
+        /*
         static async Task XCopy(string sourcePath, string destinationPath)
         {
 
@@ -325,6 +358,121 @@ namespace ClassFucker
             // 모든 Task 완료 대기
             await Task.WhenAll(tasks);
         }
+        */
+
+        static async Task XCopy(string sourcePath, string destinationPath)
+        {
+
+            Task task = Task.Run(() => CopyDirectory(sourcePath, destinationPath));
+
+            // 모든 Task 완료 대기
+            await Task.WhenAll(task);
+        }
+        static async Task DeleteDirectoryAsync(string directoryPath, Label loglabel)
+        {
+            if (!Directory.Exists(directoryPath))
+            {
+                loglabel.Text += "디렉토리가 존재하지 않습니다. \n";
+                return;
+            }
+
+            // 파일 삭제 작업을 비동기적으로 수행
+            foreach (string file in Directory.GetFiles(directoryPath))
+            {
+                await Task.Run(() =>
+                {
+                    try
+                    {
+                        File.Delete(file);
+                        loglabel.Invoke((Action)(() => loglabel.Text += $"파일 삭제됨: {file} \n"));
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        loglabel.Invoke((Action)(() => loglabel.Text += $"파일 접근 거부: {file} \n"));
+                    }
+                    catch (IOException ex)
+                    {
+                        loglabel.Invoke((Action)(() => loglabel.Text += $"파일 삭제 오류 {file}: {ex.Message} \n"));
+                    }
+                });
+            }
+
+            // 하위 디렉토리 삭제 작업을 비동기적으로 수행
+            foreach (string subdirectory in Directory.GetDirectories(directoryPath))
+            {
+                await Task.Run(async () =>
+                {
+                    try
+                    {
+                        await DeleteDirectoryAsync(subdirectory, loglabel); // 하위 디렉토리 비동기 호출
+                        Directory.Delete(subdirectory);
+                        loglabel.Invoke((Action)(() => loglabel.Text += $"디렉토리 삭제됨: {subdirectory} \n"));
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        loglabel.Invoke((Action)(() => loglabel.Text += $"디렉토리 접근 거부: {subdirectory} \n"));
+                    }
+                    catch (IOException ex)
+                    {
+                        loglabel.Invoke((Action)(() => loglabel.Text += $"디렉토리 삭제 오류 {subdirectory}: {ex.Message} \n"));
+                    }
+                });
+            }
+
+            // 최상위 디렉토리 삭제 작업을 비동기적으로 수행
+            await Task.Run(() =>
+            {
+                try
+                {
+                    Directory.Delete(directoryPath);
+                    loglabel.Invoke((Action)(() => loglabel.Text += $"디렉토리 삭제됨: {directoryPath} \n"));
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    loglabel.Invoke((Action)(() => loglabel.Text += $"디렉토리 접근 거부: {directoryPath} \n"));
+                }
+                catch (IOException ex)
+                {
+                    loglabel.Invoke((Action)(() => loglabel.Text += $"디렉토리 삭제 오류 {directoryPath}: {ex.Message} \n"));
+                }
+            });
+        }
+        static void CopyDirectory(string sourceDir, string destDir)
+        {
+            // 소스와 목적지 디렉토리가 존재하지 않는 경우 예외 발생
+            if (!Directory.Exists(sourceDir))
+            {
+                throw new DirectoryNotFoundException($"Source directory not found: {sourceDir}");
+            }
+
+            // 목적지 디렉토리 생성
+            if (!Directory.Exists(destDir))
+            {
+                Directory.CreateDirectory(destDir);
+            }
+
+            // 파일 복사
+            foreach (var filePath in Directory.GetFiles(sourceDir))
+            {
+                string destFilePath = Path.Combine(destDir, Path.GetFileName(filePath));
+                try
+                {
+                    File.Copy(filePath, destFilePath, true);
+                }
+                catch
+                {
+                    
+                }
+            }
+
+            // 하위 디렉토리 복사
+            foreach (var dirPath in Directory.GetDirectories(sourceDir))
+            {
+                string destDirPath = Path.Combine(destDir, Path.GetFileName(dirPath));
+                CopyDirectory(dirPath, destDirPath);
+            }
+        }
+
 
         ////// 경로, 라벨 수정 함수 //////
         public void SetNetSupportPath(string path)
@@ -343,30 +491,31 @@ namespace ClassFucker
 
 
         ////// 이벤트 함수들 //////
-        private void FastSc_Click(object sender, EventArgs e)
-        {
-            progressBar1.Value = 0;
-            ClassMScan();
-            NetSupportScan();
-        }
 
         private async void AllSc_Click(object sender, EventArgs e)
         {
             netSupportInfo.Text = "성능과 시간이 소모됩니다.";
             classMinfo.Text = "탐색중...";
             progressBar1.Value = 0;
-            await Task.WhenAll(AllClassMScan(), AllNetSupportScanAsync());
+            await Task.WhenAll(AllScan());
             progressBar1.Value = 100;
         }
 
-        private void _isolation_Click(object sender, EventArgs e)
+        private async void _isolation_Click(object sender, EventArgs e)
         {
-            isolation();
+            await isolation();
         }
 
         private void _Restoration_Click(object sender, EventArgs e)
         {
             Restoration();
+        }
+
+        private void FastSc_Click_1(object sender, EventArgs e)
+        {
+            progressBar1.Value = 0;
+            FastScan();
+
         }
     }
 }
