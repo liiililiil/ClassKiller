@@ -6,6 +6,11 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>png-transparent-archery-posture-black-bow-and-arrow-thumbnail.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="png-transparent-archery-posture-black-bow-and-arrow-thumbnail.ico" />
+  </ItemGroup>
 
 </Project>
