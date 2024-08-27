@@ -27,7 +27,10 @@ namespace ClassFucker
             callstop = true;
             classMPath = null;
             loglabel.Text = "ClassM 빠른 탐색중..";
-            if (Directory.Exists(@"C:\Program Files (x86)\ClassM")) // 알려진 주소 확인
+            if (Directory.Exists(@"C:\Program Files (x86)\Innosoft\ClassM Client")) // 알려진 주소 확인
+                SetClassMPath(@"C:\Program Files (x86)\Innosoft\ClassM Client\classM_Client.exe");
+
+            else if (Directory.Exists(@"C:\Program Files (x86)\ClassM")) // 알려진 주소 확인2
                 SetClassMPath(@"C:\Program Files (x86)\ClassM\hscagent.exe");
             else
             {
@@ -35,15 +38,26 @@ namespace ClassFucker
                 Process[] process = Process.GetProcessesByName("hscagent");
 
                 if (process.Length == 0)
-                    classMinfo.Text = "발견되지않음";
+                {                
+                    // 다른 프로세스 이름을 이용해 탐색
+                    process = Process.GetProcessesByName("ClassM_Client");
+
+                    if (process.Length == 0)
+                        classMinfo.Text = "발견되지않음";
+                    else
+                        SetClassMPath(process[0].MainModule.FileName);
+                }
                 else
                     SetClassMPath(process[0].MainModule.FileName);
+
+
             }
 
             progressBar1.Value += 50;
 
             netSupportPath = null;
             loglabel.Text = "NetSupport 빠른 탐색중..";
+
             if (Directory.Exists(@"C:\Program Files (x86)\NetSupport\NetSupport School")) // 알려진 주소 확인
                 SetNetSupportPath(@"C:\Program Files (x86)\NetSupport\NetSupport School\client32.exe");
             else
@@ -65,14 +79,14 @@ namespace ClassFucker
         public async Task AllScan()
         {
             classMPath = null;
-            string result = await DFSFolderFind("ClassM", progressBar1, loglabel);
+            string result = await DFSFolderFind(["ClassM","ClassM Client"], progressBar1, loglabel);
             if (result == null)
                 classMinfo.Text = "발견되지않음";
             else
                 SetClassMPath(Path.Combine(result, "hscagent.exe"));
 
             netSupportPath = null;
-            result = await DFSFolderFind("NetSupport School", progressBar1, loglabel);
+            result = await DFSFolderFind(["NetSupport School"], progressBar1, loglabel);
             if (result == null)
                 netSupportInfo.Text = "발견되지않음";
             else
@@ -81,7 +95,7 @@ namespace ClassFucker
         }
 
         // 너비 우선 탐색으로 파일 찾기
-        static async Task<string> DFSFolderFind(string targetFolderName, ProgressBar progressBar, Label loglabel)
+        static async Task<string> DFSFolderFind(string[] targetFolderName, ProgressBar progressBar, Label loglabel)
         {
             callstop = false;
             Queue<string> directoriesToSearch = new Queue<string>();
@@ -103,7 +117,7 @@ namespace ClassFucker
                 string currentDirectory = directoriesToSearch.Dequeue();
                 processedDirectories++;
                 progressBar.Value = (int)((double)processedDirectories / totalDirectories * 100);
-                loglabel.Text = $"{targetFolderName}를 찾는중 : {currentDirectory}";
+                loglabel.Text = $"{targetFolderName[0]}를 찾는중 : {currentDirectory}";
 
                 if (callstop)
                 {
@@ -120,13 +134,18 @@ namespace ClassFucker
 
                     foreach (string directory in directories)
                     {
-                        if (Path.GetFileName(directory).Equals(targetFolderName, StringComparison.OrdinalIgnoreCase))
+                        foreach(string target in targetFolderName)
                         {
-                            loglabel.Text += $"{targetFolderName} 가 발견됨! {directory}";
-                            return directory;
+                            if (Path.GetFileName(directory).Equals(target, StringComparison.OrdinalIgnoreCase))
+                            {
+                                loglabel.Text += $"{targetFolderName[0]} 가 발견됨! {directory}";
+                                return directory;
+                            }
                         }
+
                         directoriesToSearch.Enqueue(directory);
                         totalDirectories++;
+
                     }
                 }
                 catch (UnauthorizedAccessException)
@@ -278,88 +297,6 @@ namespace ClassFucker
 
         }
 
-
-        /*
-        public static async Task CopyDirectoryAsync(string sourceFolder, string destFolder, IProgress<int> progress = null)
-        {
-
-            // 대상 폴더가 존재하지 않으면 생성
-            if (!Directory.Exists(destFolder))
-                Directory.CreateDirectory(destFolder);
-
-            // 소스 폴더에서 파일과 디렉터리 목록을 가져옴
-            string[] files = Directory.GetFiles(sourceFolder);
-            string[] folders = Directory.GetDirectories(sourceFolder);
-
-            int totalItems = files.Length + folders.Length;
-            int completedItems = 0;
-
-            // 파일을 비동기적으로 복사
-            foreach (string file in files)
-            {
-                string name = Path.GetFileName(file);
-                string dest = Path.Combine(destFolder, name);
-                using (FileStream sourceStream = new FileStream(file, FileMode.Open, FileAccess.Read))
-                using (FileStream destStream = new FileStream(dest, FileMode.Create, FileAccess.Write))
-                {
-                    await sourceStream.CopyToAsync(destStream);
-                }
-                completedItems++;
-                progress?.Report((int)((double)completedItems / totalItems * 100));
-            }
-
-            // 폴더를 재귀적으로 복사 (비동기)
-            foreach (string folder in folders)
-            {
-                string name = Path.GetFileName(folder);
-                string dest = Path.Combine(destFolder, name);
-                await CopyDirectoryAsync(folder, dest, progress);
-                completedItems++;
-                progress?.Report((int)((double)completedItems / totalItems * 100));
-            }
-        }
-        */
-
-        /*
-        static async Task XCopy(string sourcePath, string destinationPath)
-        {
-
-            // 비동기 작업을 위한 Task 배열
-            Task[] tasks = new Task[1];
-
-            tasks[0] = Task.Run(async () =>
-            {
-                // xcopy 명령어를 구성합니다.
-                string command = $"/c robocopy /mir \"{sourcePath}\" \"{destinationPath}\"";
-
-                var processInfo = new ProcessStartInfo
-                {
-                    FileName = "cmd.exe",
-                    Arguments = command,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = false
-                };
-
-                // 로그 파일 이름 생성
-                string logFileName = $"{Environment.MachineName}_{DateTime.Now:yyyyMMdd_HHmmss}_copy.log";
-
-                // Process 생성 및 실행
-                using (var process = Process.Start(processInfo))
-                using (var reader = process.StandardOutput)
-                using (var errorReader = process.StandardError)
-                {
-                    // 명령어의 출력을 비동기적으로 읽습니다.
-                    var output = await reader.ReadToEndAsync();
-                    var errorOutput = await errorReader.ReadToEndAsync();
-                }
-            });
-
-            // 모든 Task 완료 대기
-            await Task.WhenAll(tasks);
-        }
-        */
 
         static async Task XCopy(string sourcePath, string destinationPath,Label loglabel)
         {
