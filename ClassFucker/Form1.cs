@@ -374,47 +374,57 @@ namespace ClassFucker
                 }
             });
         }
-        static void CopyDirectory(string sourceDir, string destDir,Label loglabel)
+
+        static async Task CopyDirectory(string sourceDir, string destDir, Label loglabel)
         {
             // 소스와 목적지 디렉토리가 존재하지 않는 경우 예외 발생
             if (!Directory.Exists(sourceDir))
             {
-                loglabel.Text += $"Fatal Error : {sourceDir}폴더가 없습니다. 복사작업이 취소되었습니다! \n";
+                loglabel.Invoke((Action)(() => loglabel.Text += $"Fatal Error : {sourceDir} 폴더가 없습니다. 복사작업이 취소되었습니다! \n"));
                 return;
             }
 
             // 목적지 디렉토리 생성
             if (!Directory.Exists(destDir))
             {
-                loglabel.Text += $"복사할 위치 {destDir}가 없어 파일이 생성되었습니다. \n";
+                loglabel.Invoke((Action)(() => loglabel.Text += $"복사할 위치 {destDir}가 없어 디렉토리가 생성되었습니다. \n"));
                 Directory.CreateDirectory(destDir);
             }
 
             // 파일 복사
-            foreach (var filePath in Directory.GetFiles(sourceDir))
+            var fileTasks = Directory.GetFiles(sourceDir).Select(async filePath =>
             {
                 string destFilePath = Path.Combine(destDir, Path.GetFileName(filePath));
                 try
                 {
-                    File.Copy(filePath, destFilePath, true);
+                    using (var sourceStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    using (var destStream = new FileStream(destFilePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                    {
+                        await sourceStream.CopyToAsync(destStream);
+                    }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    
+                    loglabel.Invoke((Action)(() => loglabel.Text += $"파일 복사 오류: {ex.Message} \n"));
                 }
-            }
+            });
+
+            await Task.WhenAll(fileTasks);
 
             // 하위 디렉토리 복사
-            foreach (var dirPath in Directory.GetDirectories(sourceDir))
+            var directoryTasks = Directory.GetDirectories(sourceDir).Select(async dirPath =>
             {
                 string destDirPath = Path.Combine(destDir, Path.GetFileName(dirPath));
-                CopyDirectory(dirPath, destDirPath,loglabel);
-            }
+                await CopyDirectory(dirPath, destDirPath, loglabel);
+            });
+
+            await Task.WhenAll(directoryTasks);
         }
 
 
-        ////// 경로, 라벨 수정 함수 //////
-        public void SetNetSupportPath(string path)
+
+    ////// 경로, 라벨 수정 함수 //////
+    public void SetNetSupportPath(string path)
         {
             netSupportPath = Path.GetDirectoryName(path);
             netSupportInfo.Text = "발견됨! 주소: " + netSupportPath;
