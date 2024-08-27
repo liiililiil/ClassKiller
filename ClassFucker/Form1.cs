@@ -58,7 +58,7 @@ namespace ClassFucker
             }
 
             progressBar1.Value += 50;
-            loglabel.Text = "빠른 탐색 완료됨";
+            loglabel.Text = "빠른 탐색 완료됨\n";
         }
 
         ////// 전체 스캔 관련 함수들 //////
@@ -77,7 +77,7 @@ namespace ClassFucker
                 netSupportInfo.Text = "발견되지않음";
             else
                 SetNetSupportPath(Path.Combine(result, "client32.exe"));
-            loglabel.Text = "전체 탐색 완료됨";
+            loglabel.Text = "전체 탐색 완료됨\n";
         }
 
         // 너비 우선 탐색으로 파일 찾기
@@ -194,7 +194,7 @@ namespace ClassFucker
 
             progressBar1.Value = 100;
 
-            loglabel.Text += "작업이 완료됨";
+            loglabel.Text += "작업이 완료됨\n";
         }
         public async Task Restoration()
         {
@@ -237,7 +237,7 @@ namespace ClassFucker
             }
             progressBar1.Value = 100;
 
-            loglabel.Text += "작업 완료됨";
+            loglabel.Text += "작업 완료됨\n";
 
         }
 
