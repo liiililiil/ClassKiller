@@ -77,6 +77,7 @@ namespace ClassFucker
                 netSupportInfo.Text = "발견되지않음";
             else
                 SetNetSupportPath(Path.Combine(result, "client32.exe"));
+            loglabel.Text = "전체 탐색 완료됨";
         }
 
         // 너비 우선 탐색으로 파일 찾기
@@ -107,7 +108,7 @@ namespace ClassFucker
                 if (callstop)
                 {
                     callstop = false;
-                    loglabel.Text = "빠른탐색 진행으로 전체 탐색이 중단됨";
+                    loglabel.Text += "빠른탐색 진행으로 전체 탐색이 중단됨";
                     return null;
                 }
 
@@ -121,8 +122,8 @@ namespace ClassFucker
                     {
                         if (Path.GetFileName(directory).Equals(targetFolderName, StringComparison.OrdinalIgnoreCase))
                         {
+                            loglabel.Text += $"{targetFolderName} 가 발견됨! {directory}";
                             return directory;
-                            loglabel.Text = $"{targetFolderName} 가 발견됨! {directory}";
                         }
                         directoriesToSearch.Enqueue(directory);
                         totalDirectories++;
@@ -362,18 +363,6 @@ namespace ClassFucker
 
         static async Task XCopy(string sourcePath, string destinationPath,Label loglabel)
         {
-            if (!Directory.Exists(sourcePath))
-            {
-                loglabel.Text += $"Fatal Error : {sourcePath}폴더가 없습니다. 복사작업이 취소되었습니다! \n";
-                return;
-            }
-
-            if (!Directory.Exists(destinationPath))
-            {
-                loglabel.Text += $"Fatal Error : {destinationPath}폴더가 없습니다. 복사작업이 취소되었습니다! \n";
-                return;
-            }
-
             Task task = Task.Run(() => CopyDirectory(sourcePath, destinationPath, loglabel));
 
             // 모든 Task 완료 대기
@@ -460,8 +449,8 @@ namespace ClassFucker
             // 목적지 디렉토리 생성
             if (!Directory.Exists(destDir))
             {
-                loglabel.Text += $"Fatal Error : {destDir}폴더가 없습니다. 복사작업이 취소되었습니다! \n";
-                return;
+                loglabel.Text += $"복사할 위치 {destDir}가 없어 파일이 생성되었습니다. \n";
+                Directory.CreateDirectory(destDir);
             }
 
             // 파일 복사
