@@ -1,7 +1,6 @@
 
+using Microsoft.VisualBasic;
 using System.Diagnostics;
-using System.IO;
-using System.Security.Claims;
 
 
 namespace ClassFucker
@@ -38,7 +37,7 @@ namespace ClassFucker
                 Process[] process = Process.GetProcessesByName("hscagent");
 
                 if (process.Length == 0)
-                {                
+                {
                     // 다른 프로세스 이름을 이용해 탐색
                     process = Process.GetProcessesByName("ClassM_Client");
 
@@ -79,7 +78,7 @@ namespace ClassFucker
         public async Task AllScan()
         {
             classMPath = null;
-            string result = await DFSFolderFind(["ClassM","ClassM Client"], progressBar1, loglabel);
+            string result = await DFSFolderFind(["ClassM", "ClassM Client"], progressBar1, loglabel);
             if (result == null)
                 classMinfo.Text = "발견되지않음";
             else
@@ -134,7 +133,7 @@ namespace ClassFucker
 
                     foreach (string directory in directories)
                     {
-                        foreach(string target in targetFolderName)
+                        foreach (string target in targetFolderName)
                         {
                             if (Path.GetFileName(directory).Equals(target, StringComparison.OrdinalIgnoreCase))
                             {
@@ -291,14 +290,16 @@ namespace ClassFucker
             {
                 Process.Start(name);
                 loglabel.Text += $"{name}(을)를 실행함 \n";
-            } else {
+            }
+            else
+            {
                 loglabel.Text += $"{name} (이)가 실행되지않음 \n";
             }
 
         }
 
 
-        static async Task XCopy(string sourcePath, string destinationPath,Label loglabel)
+        static async Task XCopy(string sourcePath, string destinationPath, Label loglabel)
         {
             Task task = Task.Run(() => CopyDirectory(sourcePath, destinationPath, loglabel));
 
@@ -423,8 +424,8 @@ namespace ClassFucker
 
 
 
-    ////// 경로, 라벨 수정 함수 //////
-    public void SetNetSupportPath(string path)
+        ////// 경로, 라벨 수정 함수 //////
+        public void SetNetSupportPath(string path)
         {
             netSupportPath = Path.GetDirectoryName(path);
             netSupportInfo.Text = "발견됨! 주소: " + netSupportPath;
@@ -465,6 +466,19 @@ namespace ClassFucker
             progressBar1.Value = 0;
             FastScan();
 
+        }
+
+        private async void timer1_Tick(object sender, EventArgs e)
+        {
+            if(checkBox1.Checked == true &&!Process.GetProcessesByName("explorer").Any())
+            {
+                MessageBox.Show("복구를 시도중입니다.");
+                await AllScan();
+                await isolation();
+                ProcessStart("Explorer");
+                MessageBox.Show("복구 시도를 완료하였습니다.");
+
+            }
         }
     }
 }
