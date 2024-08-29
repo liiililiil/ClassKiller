@@ -11,6 +11,7 @@ namespace ClassFucker
         private static bool callstop = false;
         private string classMPath;
         private string netSupportPath;
+        private bool tryrestore;
 
         public Form1()
         {
@@ -470,13 +471,14 @@ namespace ClassFucker
 
         private async void timer1_Tick(object sender, EventArgs e)
         {
-            if(checkBox1.Checked == true &&!Process.GetProcessesByName("explorer").Any())
+            if (tryrestore == false && checkBox1.Checked == true &&!Process.GetProcessesByName("explorer").Any())
             {
-                MessageBox.Show("복구를 시도중입니다.");
+                tryrestore = true;
                 await AllScan();
                 await isolation();
                 ProcessStart("Explorer");
                 MessageBox.Show("복구 시도를 완료하였습니다.");
+                tryrestore = false;
 
             }
         }
