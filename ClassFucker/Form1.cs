@@ -7,7 +7,6 @@ namespace ClassFucker
 {
     public partial class Form1 : Form
     {
-
         private static bool callstop = false;
         private string classMPath;
         private string netSupportPath;
@@ -17,6 +16,7 @@ namespace ClassFucker
         {
 
             InitializeComponent();
+            loglabel.ReadOnly = true;
             FastScan();
         }
 
@@ -26,7 +26,7 @@ namespace ClassFucker
         {
             callstop = true;
             classMPath = null;
-            loglabel.Text = "ClassM 빠른 탐색중..";
+            loglabel.Text = $"ClassM 빠른 탐색중.. \n";
             if (Directory.Exists(@"C:\Program Files (x86)\Innosoft\ClassM Client")) // 알려진 주소 확인
                 SetClassMPath(@"C:\Program Files (x86)\Innosoft\ClassM Client\classM_Client.exe");
 
@@ -56,7 +56,7 @@ namespace ClassFucker
             progressBar1.Value += 50;
 
             netSupportPath = null;
-            loglabel.Text = "NetSupport 빠른 탐색중..";
+            loglabel.Text += $"NetSupport 빠른 탐색중.. \n";
 
             if (Directory.Exists(@"C:\Program Files (x86)\NetSupport\NetSupport School")) // 알려진 주소 확인
                 SetNetSupportPath(@"C:\Program Files (x86)\NetSupport\NetSupport School\client32.exe");
@@ -72,7 +72,7 @@ namespace ClassFucker
             }
 
             progressBar1.Value += 50;
-            loglabel.Text = "빠른 탐색 완료됨\n";
+            loglabel.Text += $"빠른 탐색 완료됨\n";
         }
 
         ////// 전체 스캔 관련 함수들 //////
@@ -91,11 +91,11 @@ namespace ClassFucker
                 netSupportInfo.Text = "발견되지않음";
             else
                 SetNetSupportPath(Path.Combine(result, "client32.exe"));
-            loglabel.Text = "전체 탐색 완료됨\n";
+            loglabel.Text += "전체 탐색 완료됨\n";
         }
 
         // 너비 우선 탐색으로 파일 찾기
-        static async Task<string> DFSFolderFind(string[] targetFolderName, ProgressBar progressBar, Label loglabel)
+        static async Task<string> DFSFolderFind(string[] targetFolderName, ProgressBar progressBar, TextBox loglabel)
         {
             callstop = false;
             Queue<string> directoriesToSearch = new Queue<string>();
@@ -172,6 +172,7 @@ namespace ClassFucker
                 ProcessKill("ClassM_Client");
                 ProcessKill("ClassM_Client_Service");
                 ProcessKill("mvnc");
+                ProcessKill("MwWatch");
                 ProcessKill("SysCtrl");
                 ProcessKill("hscagent");
                 await XCopy(classMPath, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ClassM"), loglabel);
@@ -300,14 +301,14 @@ namespace ClassFucker
         }
 
 
-        static async Task XCopy(string sourcePath, string destinationPath, Label loglabel)
+        static async Task XCopy(string sourcePath, string destinationPath, TextBox loglabel)
         {
             Task task = Task.Run(() => CopyDirectory(sourcePath, destinationPath, loglabel));
 
             // 모든 Task 완료 대기
             await Task.WhenAll(task);
         }
-        static async Task DeleteDirectoryAsync(string directoryPath, Label loglabel)
+        static async Task DeleteDirectoryAsync(string directoryPath, TextBox loglabel)
         {
             if (!Directory.Exists(directoryPath))
             {
@@ -377,7 +378,7 @@ namespace ClassFucker
             });
         }
 
-        static async Task CopyDirectory(string sourceDir, string destDir, Label loglabel)
+        static async Task CopyDirectory(string sourceDir, string destDir, TextBox loglabel)
         {
             // 소스와 목적지 디렉토리가 존재하지 않는 경우 예외 발생
             if (!Directory.Exists(sourceDir))
@@ -471,7 +472,7 @@ namespace ClassFucker
 
         private async void timer1_Tick(object sender, EventArgs e)
         {
-            if (tryrestore == false && checkBox1.Checked == true &&!Process.GetProcessesByName("explorer").Any())
+            if (tryrestore == false && checkBox1.Checked == true && !Process.GetProcessesByName("explorer").Any())
             {
                 tryrestore = true;
                 await AllScan();
@@ -481,6 +482,30 @@ namespace ClassFucker
                 tryrestore = false;
 
             }
+
+            if(checkBox1.Checked == true)
+            {
+                try
+                {
+                    ProcessKill("ClassM_Client");
+                    ProcessKill("ClassM_Client_Service");
+                    ProcessKill("mvnc");
+                    ProcessKill("MwWatch");
+                    ProcessKill("SysCtrl");
+                    ProcessKill("hscagent");
+                    ProcessKill("client32");
+                    ProcessKill("StudentUI");
+                    ProcessKill("NSToast");
+                    ProcessKill("ClassicStartMenu");
+                    ProcessKill("nspowershell");
+                    ProcessKill("NSClientTB");
+                }
+                catch
+                {
+                    
+                }
+            }
         }
+
     }
 }
