@@ -122,7 +122,7 @@ namespace ClassFucker
                 if (callstop)
                 {
                     callstop = false;
-                    loglabel.Text += "빠른탐색 진행으로 전체 탐색이 중단됨";
+                    loglabel.Text += "빠른탐색 진행으로 전체 탐색이 중단됨";`
                     return null;
                 }
 
@@ -172,7 +172,6 @@ namespace ClassFucker
                 ProcessKill("ClassM_Client");
                 ProcessKill("ClassM_Client_Service");
                 ProcessKill("mvnc");
-                ProcessKill("MwWatch");
                 ProcessKill("SysCtrl");
                 ProcessKill("hscagent");
                 await XCopy(classMPath, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ClassM"), loglabel);
@@ -490,7 +489,6 @@ namespace ClassFucker
                     ProcessKill("ClassM_Client");
                     ProcessKill("ClassM_Client_Service");
                     ProcessKill("mvnc");
-                    ProcessKill("MwWatch");
                     ProcessKill("SysCtrl");
                     ProcessKill("hscagent");
                     ProcessKill("client32");
