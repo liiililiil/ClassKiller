@@ -66,26 +66,25 @@
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 10;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 110F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 81F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 28F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 60.0000038F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 39.9999962F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 25F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
             tableLayoutPanel1.Size = new Size(283, 372);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // progressBar1
             // 
             progressBar1.Dock = DockStyle.Fill;
-            progressBar1.Location = new Point(3, 344);
+            progressBar1.Location = new Point(3, 345);
             progressBar1.Name = "progressBar1";
-            progressBar1.Size = new Size(277, 25);
+            progressBar1.Size = new Size(277, 24);
             progressBar1.TabIndex = 0;
             // 
             // label1
@@ -93,7 +92,7 @@
             label1.AutoSize = true;
             label1.BorderStyle = BorderStyle.FixedSingle;
             label1.Dock = DockStyle.Fill;
-            label1.Location = new Point(3, 284);
+            label1.Location = new Point(3, 277);
             label1.Name = "label1";
             label1.Size = new Size(277, 20);
             label1.TabIndex = 1;
@@ -104,7 +103,7 @@
             // 
             label2.BorderStyle = BorderStyle.FixedSingle;
             label2.Dock = DockStyle.Fill;
-            label2.Location = new Point(3, 219);
+            label2.Location = new Point(3, 207);
             label2.Name = "label2";
             label2.Size = new Size(277, 20);
             label2.TabIndex = 2;
@@ -116,7 +115,7 @@
             netSupportInfo.AutoSize = true;
             netSupportInfo.Dock = DockStyle.Fill;
             netSupportInfo.ImageAlign = ContentAlignment.MiddleLeft;
-            netSupportInfo.Location = new Point(3, 304);
+            netSupportInfo.Location = new Point(3, 297);
             netSupportInfo.Name = "netSupportInfo";
             netSupportInfo.Size = new Size(277, 20);
             netSupportInfo.TabIndex = 3;
@@ -126,7 +125,7 @@
             // 
             classMinfo.AutoSize = true;
             classMinfo.Dock = DockStyle.Fill;
-            classMinfo.Location = new Point(3, 239);
+            classMinfo.Location = new Point(3, 227);
             classMinfo.Name = "classMinfo";
             classMinfo.Size = new Size(277, 20);
             classMinfo.TabIndex = 4;
@@ -151,7 +150,7 @@
             tableLayoutPanel2.Controls.Add(checkBox2, 0, 2);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
-            tableLayoutPanel2.Location = new Point(3, 113);
+            tableLayoutPanel2.Location = new Point(3, 101);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 3;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 42.63039F));
@@ -236,7 +235,7 @@
             loglabel.Name = "loglabel";
             loglabel.ReadOnly = true;
             loglabel.ScrollBars = ScrollBars.Both;
-            loglabel.Size = new Size(277, 104);
+            loglabel.Size = new Size(277, 92);
             loglabel.TabIndex = 6;
             loglabel.TabStop = false;
             loglabel.Text = "로그창";
