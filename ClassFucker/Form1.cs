@@ -1,6 +1,7 @@
 
 using Microsoft.VisualBasic;
 using System.Diagnostics;
+using System.Xml.Linq;
 
 
 namespace ClassFucker
@@ -169,11 +170,7 @@ namespace ClassFucker
             //ClassM 부분
             if (!string.IsNullOrEmpty(classMPath) && !File.Exists(Path.Combine(classMPath, "ClassMIsolation.txt")))
             {
-                ProcessKill("ClassM_Client");
-                ProcessKill("ClassM_Client_Service");
-                ProcessKill("mvnc");
-                ProcessKill("SysCtrl");
-                ProcessKill("hscagent");
+                await allkill();
                 await XCopy(classMPath, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ClassM"), loglabel);
                 DeleteDirectoryAsync(classMPath, loglabel);
                 File.WriteAllText(Path.Combine(classMPath, "ClassMIsolation.txt"), "이것은 ClassM이 제거됬다는 것을 증명합니다. 삭제하지 말아주세요.");
@@ -195,12 +192,7 @@ namespace ClassFucker
             //NetSupport부분
             if (!string.IsNullOrEmpty(netSupportPath) && !File.Exists(Path.Combine(netSupportPath, "NetSupportPathIsolation.txt")))
             {
-                ProcessKill("client32");
-                ProcessKill("StudentUI");
-                ProcessKill("NSToast");
-                ProcessKill("ClassicStartMenu");
-                ProcessKill("nspowershell");
-                ProcessKill("NSClientTB");
+                await allkill();
                 await XCopy(netSupportPath, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NetSupport"), loglabel);
                 DeleteDirectoryAsync(netSupportPath, loglabel);
                 File.WriteAllText(Path.Combine(netSupportPath, "NetSupportPathIsolation.txt"), "이것은 NetSupportPath이 제거됬다는 것을 증명합니다. 삭제하지 말아주세요.");
@@ -251,14 +243,17 @@ namespace ClassFucker
                 ProcessStart(Path.Combine(netSupportPath, "ClassicStartMenu.exe"));
                 ProcessStart(Path.Combine(netSupportPath, "nspowershell.exe"));
                 ProcessStart(Path.Combine(netSupportPath, "NSClientTB.exe"));
+                ProcessStart(Path.Combine(netSupportPath, "Runplugin64.exe"));
+                ProcessStart(Path.Combine(netSupportPath, "runplugin.exe"));
                 File.Delete(Path.Combine(netSupportPath, "NetSupportPathIsolation.txt"));
-                loglabel.Text += $"NetSupport 작업 완료 \n";
+                loglabel.Text += $"NetSupport 작업 완료 " + Environment.NewLine;
             }
             progressBar1.Value = 100;
 
-            loglabel.Text += "작업 완료됨\n";
+            loglabel.Text += "작업 완료됨" + Environment.NewLine;
 
         }
+
 
         public void ProcessKill(string name)
         {
@@ -268,20 +263,43 @@ namespace ClassFucker
 
                 foreach (Process process in processes)
                 {
-                    loglabel.Text += $"{name} (이)가 종료됨 \n";
+                    loglabel.Text += $"{name} (이)가 종료됨 " + Environment.NewLine;
                     process.Kill();
 
                 }
 
                 if (processes.Length == 0)
                 {
-                    loglabel.Text += $"{name} (이)가 종료되지않음 \n";
+                    loglabel.Text += $"{name} (이)가 종료되지않음 " + Environment.NewLine;
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+
+        }
+        private async Task allkill()
+        {
+            SilenceProcessKill("ClassM_Client");
+            SilenceProcessKill("ClassM_Client_Service");
+            SilenceProcessKill("client32");
+            SilenceProcessKill("Runplugin64");
+            SilenceProcessKill("runplugin");
+            SilenceProcessKill("SysCtrl");
+            SilenceProcessKill("mvnc");
+            SilenceProcessKill("hscagent");
+            SilenceProcessKill("CertTool");
+            SilenceProcessKill("hscdm");
+            SilenceProcessKill("hscfm");
+            SilenceProcessKill("hscrelay");
+            SilenceProcessKill("ClassicStartMenu");
+            SilenceProcessKill("P2PSyncService");
+            SilenceProcessKill("BarMonitor");
+            SilenceProcessKill("StartMenuExperienceHost");
+            SilenceProcessKill("BarClientView");
+            SilenceProcessKill("Launcher Start");
+            loglabel.Text += $"일괄종료 완료됨"+ Environment.NewLine;
 
         }
         public void SilenceProcessKill(string name)
