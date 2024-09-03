@@ -217,7 +217,7 @@ namespace ClassFucker
                 loglabel.Text += "ClassM이 격리된 흔적이 발견되지 않아 건너뜀 " + Environment.NewLine;
             else
             {
-                await XCopy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ClassM"), classMPath, loglabel);
+                XCopy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ClassM"), classMPath, loglabel);
                 ProcessStart(Path.Combine(classMPath, "ClassM_Client.exe"));
                 ProcessStart(Path.Combine(classMPath, "ClassM_Client_Service.exe"));
                 ProcessStart(Path.Combine(classMPath, "mvnc.exe"));
@@ -236,7 +236,7 @@ namespace ClassFucker
                 loglabel.Text += $"NetSupport가 격리된 흔적이 발견되지 않아 건너뜀 " + Environment.NewLine;
             else
             {
-                await XCopy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NetSupport"), netSupportPath, loglabel);
+                XCopy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NetSupport"), netSupportPath, loglabel);
                 ProcessStart(Path.Combine(netSupportPath, "client32.exe"));
                 ProcessStart(Path.Combine(netSupportPath, "StudentUI.exe"));
                 ProcessStart(Path.Combine(netSupportPath, "NSToast.exe"));
@@ -275,7 +275,7 @@ namespace ClassFucker
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                loglabel.Text += "에러발생{ex}" + Environment.NewLine;
             }
 
         }
@@ -320,19 +320,18 @@ namespace ClassFucker
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                loglabel.Text += "에러발생{ex}" + Environment.NewLine;
             }
 
         }
         public void ProcessStart(string name)
         {
-
-            if (File.Exists(name))
+            try
             {
                 Process.Start(name);
                 loglabel.Text += $"{name}(을)를 실행함 " + Environment.NewLine;
             }
-            else
+            catch(Exception ex)
             {
                 loglabel.Text += $"{name} (이)가 실행되지않음 " + Environment.NewLine;
             }
@@ -342,11 +341,50 @@ namespace ClassFucker
 
         static async Task XCopy(string sourcePath, string destinationPath, TextBox loglabel)
         {
-            Task task = Task.Run(() => CopyDirectory(sourcePath, destinationPath, loglabel));
+            // 소스와 목적지 디렉토리가 존재하지 않는 경우 예외 발생
+            if (!Directory.Exists(sourcePath))
+            {
+                loglabel.Invoke((Action)(() => loglabel.Text += $"Fatal Error: {sourcePath} 폴더가 없습니다. 복사 작업이 취소되었습니다!" + Environment.NewLine));
+                return;
+            }
 
-            // 모든 Task 완료 대기
-            await Task.WhenAll(task);
+            // 목적지 디렉토리 생성
+            if (!Directory.Exists(destinationPath))
+            {
+                loglabel.Invoke((Action)(() => loglabel.Text += $"복사할 위치 {destinationPath}가 없어 디렉토리가 생성되었습니다." + Environment.NewLine));
+                Directory.CreateDirectory(destinationPath);
+            }
+
+            // 파일 복사
+            var fileTasks = Directory.GetFiles(sourcePath).Select(async filePath =>
+            {
+                string destFilePath = Path.Combine(destinationPath, Path.GetFileName(filePath));
+                try
+                {
+                    using (var sourceStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    using (var destStream = new FileStream(destFilePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                    {
+                        await sourceStream.CopyToAsync(destStream);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    loglabel.Invoke((Action)(() => loglabel.Text += $"파일 복사 오류: {ex.Message}" + Environment.NewLine));
+                }
+            });
+
+            await Task.WhenAll(fileTasks);
+
+            // 하위 디렉토리 복사
+            var directoryTasks = Directory.GetDirectories(sourcePath).Select(async dirPath =>
+            {
+                string destDirPath = Path.Combine(destinationPath, Path.GetFileName(dirPath));
+                await XCopy(dirPath, destDirPath, loglabel);
+            });
+
+            await Task.WhenAll(directoryTasks);
         }
+
         static async Task DeleteDirectoryAsync(string directoryPath, TextBox loglabel)
         {
             if (!Directory.Exists(directoryPath))
@@ -417,51 +455,6 @@ namespace ClassFucker
             });
         }
 
-        static async Task CopyDirectory(string sourceDir, string destDir, TextBox loglabel)
-        {
-            // 소스와 목적지 디렉토리가 존재하지 않는 경우 예외 발생
-            if (!Directory.Exists(sourceDir))
-            {
-                loglabel.Invoke((Action)(() => loglabel.Text += $"Fatal Error : {sourceDir} 폴더가 없습니다. 복사작업이 취소되었습니다! "+ Environment.NewLine));
-                return;
-            }
-
-            // 목적지 디렉토리 생성
-            if (!Directory.Exists(destDir))
-            {
-                loglabel.Invoke((Action)(() => loglabel.Text += $"복사할 위치 {destDir}가 없어 디렉토리가 생성되었습니다. " + Environment.NewLine));
-                Directory.CreateDirectory(destDir);
-            }
-
-            // 파일 복사
-            var fileTasks = Directory.GetFiles(sourceDir).Select(async filePath =>
-            {
-                string destFilePath = Path.Combine(destDir, Path.GetFileName(filePath));
-                try
-                {
-                    using (var sourceStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
-                    using (var destStream = new FileStream(destFilePath, FileMode.Create, FileAccess.Write, FileShare.None))
-                    {
-                        await sourceStream.CopyToAsync(destStream);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    loglabel.Invoke((Action)(() => loglabel.Text += $"파일 복사 오류: {ex.Message} " + Environment.NewLine));
-                }
-            });
-
-            await Task.WhenAll(fileTasks);
-
-            // 하위 디렉토리 복사
-            var directoryTasks = Directory.GetDirectories(sourceDir).Select(async dirPath =>
-            {
-                string destDirPath = Path.Combine(destDir, Path.GetFileName(dirPath));
-                await CopyDirectory(dirPath, destDirPath, loglabel);
-            });
-
-            await Task.WhenAll(directoryTasks);
-        }
 
 
 
