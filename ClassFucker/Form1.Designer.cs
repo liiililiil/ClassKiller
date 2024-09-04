@@ -79,15 +79,15 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 25F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
-            tableLayoutPanel1.Size = new Size(440, 391);
+            tableLayoutPanel1.Size = new Size(528, 347);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // progressBar1
             // 
             progressBar1.Dock = DockStyle.Fill;
-            progressBar1.Location = new Point(3, 364);
+            progressBar1.Location = new Point(3, 320);
             progressBar1.Name = "progressBar1";
-            progressBar1.Size = new Size(434, 24);
+            progressBar1.Size = new Size(522, 24);
             progressBar1.TabIndex = 0;
             // 
             // label1
@@ -95,9 +95,9 @@
             label1.AutoSize = true;
             label1.BorderStyle = BorderStyle.FixedSingle;
             label1.Dock = DockStyle.Fill;
-            label1.Location = new Point(3, 296);
+            label1.Location = new Point(3, 252);
             label1.Name = "label1";
-            label1.Size = new Size(434, 20);
+            label1.Size = new Size(522, 20);
             label1.TabIndex = 1;
             label1.Text = "NetSupport";
             label1.TextAlign = ContentAlignment.MiddleLeft;
@@ -106,9 +106,9 @@
             // 
             label2.BorderStyle = BorderStyle.FixedSingle;
             label2.Dock = DockStyle.Fill;
-            label2.Location = new Point(3, 226);
+            label2.Location = new Point(3, 182);
             label2.Name = "label2";
-            label2.Size = new Size(434, 20);
+            label2.Size = new Size(522, 20);
             label2.TabIndex = 2;
             label2.Text = "ClassM";
             label2.TextAlign = ContentAlignment.MiddleLeft;
@@ -118,9 +118,9 @@
             netSupportInfo.AutoSize = true;
             netSupportInfo.Dock = DockStyle.Fill;
             netSupportInfo.ImageAlign = ContentAlignment.MiddleLeft;
-            netSupportInfo.Location = new Point(3, 316);
+            netSupportInfo.Location = new Point(3, 272);
             netSupportInfo.Name = "netSupportInfo";
-            netSupportInfo.Size = new Size(434, 20);
+            netSupportInfo.Size = new Size(522, 20);
             netSupportInfo.TabIndex = 3;
             netSupportInfo.Text = "알수없음";
             // 
@@ -128,9 +128,9 @@
             // 
             classMinfo.AutoSize = true;
             classMinfo.Dock = DockStyle.Fill;
-            classMinfo.Location = new Point(3, 246);
+            classMinfo.Location = new Point(3, 202);
             classMinfo.Name = "classMinfo";
-            classMinfo.Size = new Size(434, 20);
+            classMinfo.Size = new Size(522, 20);
             classMinfo.TabIndex = 4;
             classMinfo.Text = "알수없음";
             classMinfo.TextAlign = ContentAlignment.MiddleLeft;
@@ -158,22 +158,22 @@
             tableLayoutPanel2.Controls.Add(stop, 6, 2);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
-            tableLayoutPanel2.Location = new Point(3, 120);
+            tableLayoutPanel2.Location = new Point(3, 76);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 3;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 42.63039F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 14.7392311F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 42.6303825F));
-            tableLayoutPanel2.Size = new Size(434, 75);
+            tableLayoutPanel2.Size = new Size(522, 75);
             tableLayoutPanel2.TabIndex = 5;
             // 
             // FastSc
             // 
             FastSc.AutoSize = true;
             FastSc.Dock = DockStyle.Fill;
-            FastSc.Location = new Point(111, 3);
+            FastSc.Location = new Point(133, 3);
             FastSc.Name = "FastSc";
-            FastSc.Size = new Size(82, 25);
+            FastSc.Size = new Size(104, 25);
             FastSc.TabIndex = 0;
             FastSc.Text = "빠른 탐색";
             FastSc.UseVisualStyleBackColor = true;
@@ -183,9 +183,9 @@
             // 
             AllSc.AutoSize = true;
             AllSc.Dock = DockStyle.Fill;
-            AllSc.Location = new Point(111, 45);
+            AllSc.Location = new Point(133, 45);
             AllSc.Name = "AllSc";
-            AllSc.Size = new Size(82, 27);
+            AllSc.Size = new Size(104, 27);
             AllSc.TabIndex = 1;
             AllSc.Text = "전체 탐색";
             AllSc.UseVisualStyleBackColor = true;
@@ -194,9 +194,9 @@
             // _Restoration
             // 
             _Restoration.Dock = DockStyle.Fill;
-            _Restoration.Location = new Point(219, 45);
+            _Restoration.Location = new Point(263, 45);
             _Restoration.Name = "_Restoration";
-            _Restoration.Size = new Size(82, 27);
+            _Restoration.Size = new Size(104, 27);
             _Restoration.TabIndex = 3;
             _Restoration.Text = "복구";
             _Restoration.UseVisualStyleBackColor = true;
@@ -205,9 +205,9 @@
             // _isolation
             // 
             _isolation.Dock = DockStyle.Fill;
-            _isolation.Location = new Point(219, 3);
+            _isolation.Location = new Point(263, 3);
             _isolation.Name = "_isolation";
-            _isolation.Size = new Size(82, 25);
+            _isolation.Size = new Size(104, 25);
             _isolation.TabIndex = 4;
             _isolation.Text = "격리";
             _isolation.UseVisualStyleBackColor = true;
@@ -219,7 +219,7 @@
             checkBox1.Dock = DockStyle.Fill;
             checkBox1.Location = new Point(3, 3);
             checkBox1.Name = "checkBox1";
-            checkBox1.Size = new Size(82, 25);
+            checkBox1.Size = new Size(104, 25);
             checkBox1.TabIndex = 5;
             checkBox1.Text = "제어감지";
             checkBox1.UseVisualStyleBackColor = true;
@@ -230,7 +230,7 @@
             checkBox2.Dock = DockStyle.Fill;
             checkBox2.Location = new Point(3, 45);
             checkBox2.Name = "checkBox2";
-            checkBox2.Size = new Size(82, 27);
+            checkBox2.Size = new Size(104, 27);
             checkBox2.TabIndex = 6;
             checkBox2.Text = "상시종료";
             checkBox2.UseVisualStyleBackColor = true;
@@ -238,9 +238,9 @@
             // start
             // 
             start.Dock = DockStyle.Fill;
-            start.Location = new Point(327, 3);
+            start.Location = new Point(393, 3);
             start.Name = "start";
-            start.Size = new Size(82, 25);
+            start.Size = new Size(104, 25);
             start.TabIndex = 7;
             start.Text = "켜기";
             start.UseVisualStyleBackColor = true;
@@ -249,9 +249,9 @@
             // stop
             // 
             stop.Dock = DockStyle.Fill;
-            stop.Location = new Point(327, 45);
+            stop.Location = new Point(393, 45);
             stop.Name = "stop";
-            stop.Size = new Size(82, 27);
+            stop.Size = new Size(104, 27);
             stop.TabIndex = 8;
             stop.Text = "끄기";
             stop.UseVisualStyleBackColor = true;
@@ -265,7 +265,7 @@
             loglabel.Name = "loglabel";
             loglabel.ReadOnly = true;
             loglabel.ScrollBars = ScrollBars.Both;
-            loglabel.Size = new Size(434, 111);
+            loglabel.Size = new Size(522, 67);
             loglabel.TabIndex = 6;
             loglabel.TabStop = false;
             loglabel.Text = "로그창";
@@ -279,7 +279,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(440, 391);
+            ClientSize = new Size(528, 347);
             Controls.Add(tableLayoutPanel1);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Form1";

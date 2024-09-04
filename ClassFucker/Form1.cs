@@ -232,7 +232,8 @@ namespace ClassFucker
             else
             {
                 XCopy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ClassM"), classMPath, loglabel);
-                Task.Delay(4500).Wait();
+                loglabel.Text += "7초뒤 일괄 실행됩니다." + Environment.NewLine;
+                Task.Delay(7000).Wait();
                 ProcessStart(Path.Combine(classMPath, "ClassM_Client.exe"));
                 ProcessStart(Path.Combine(classMPath, "ClassM_Client_Service.exe"));
                 ProcessStart(Path.Combine(classMPath, "mvnc.exe"));
@@ -252,7 +253,8 @@ namespace ClassFucker
             else
             {
                 XCopy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NetSupport"), netSupportPath, loglabel);
-                Task.Delay(4500).Wait();
+                loglabel.Text += "7초뒤 일괄 실행됩니다." + Environment.NewLine;
+                Task.Delay(7000).Wait();
                 ProcessStart(Path.Combine(netSupportPath, "client32.exe"));
                 ProcessStart(Path.Combine(netSupportPath, "StudentUI.exe"));
                 ProcessStart(Path.Combine(netSupportPath, "NSToast.exe"));
@@ -417,7 +419,6 @@ namespace ClassFucker
                     try
                     {
                         File.Delete(file);
-                        loglabel.Invoke((Action)(() => loglabel.Text += $"파일 삭제됨: {file} " + Environment.NewLine));
                     }
                     catch (UnauthorizedAccessException)
                     {
@@ -439,7 +440,6 @@ namespace ClassFucker
                     {
                         await DeleteDirectoryAsync(subdirectory, loglabel); // 하위 디렉토리 비동기 호출
                         Directory.Delete(subdirectory);
-                        loglabel.Invoke((Action)(() => loglabel.Text += $"디렉토리 삭제됨: {subdirectory} " + Environment.NewLine));
                     }
                     catch (UnauthorizedAccessException)
                     {
@@ -557,25 +557,33 @@ namespace ClassFucker
 
         private void start_Click(object sender, EventArgs e) //켜기
         {
+            loglabel.Text = "";
+            if(classMPath != null)
+            {
+                ProcessStart(Path.Combine(classMPath, "ClassM_Client.exe"));
+                ProcessStart(Path.Combine(classMPath, "ClassM_Client_Service.exe"));
+                ProcessStart(Path.Combine(classMPath, "mvnc.exe"));
+                ProcessStart(Path.Combine(classMPath, "SysCtrl.exe"));
+                ProcessStart(Path.Combine(classMPath, "hscagent.exe"));
+            }
 
-            ProcessStart(Path.Combine(classMPath, "ClassM_Client.exe"));
-            ProcessStart(Path.Combine(classMPath, "ClassM_Client_Service.exe"));
-            ProcessStart(Path.Combine(classMPath, "mvnc.exe"));
-            ProcessStart(Path.Combine(classMPath, "SysCtrl.exe"));
-            ProcessStart(Path.Combine(classMPath, "hscagent.exe"));
-            ProcessStart(Path.Combine(netSupportPath, "client32.exe"));
-            ProcessStart(Path.Combine(netSupportPath, "StudentUI.exe"));
-            ProcessStart(Path.Combine(netSupportPath, "NSToast.exe"));
-            ProcessStart(Path.Combine(netSupportPath, "ClassicStartMenu.exe"));
-            ProcessStart(Path.Combine(netSupportPath, "nspowershell.exe"));
-            ProcessStart(Path.Combine(netSupportPath, "NSClientTB.exe"));
-            ProcessStart(Path.Combine(netSupportPath, "Runplugin64.exe"));
-            ProcessStart(Path.Combine(netSupportPath, "runplugin.exe"));
+            if (netSupportPath != null)
+            {
+                ProcessStart(Path.Combine(netSupportPath, "client32.exe"));
+                ProcessStart(Path.Combine(netSupportPath, "StudentUI.exe"));
+                ProcessStart(Path.Combine(netSupportPath, "NSToast.exe"));
+                ProcessStart(Path.Combine(netSupportPath, "ClassicStartMenu.exe"));
+                ProcessStart(Path.Combine(netSupportPath, "nspowershell.exe"));
+                ProcessStart(Path.Combine(netSupportPath, "NSClientTB.exe"));
+                ProcessStart(Path.Combine(netSupportPath, "Runplugin64.exe"));
+                ProcessStart(Path.Combine(netSupportPath, "runplugin.exe"));
+            }
 
         }
 
         private void stop_Click(object sender, EventArgs e) //끄기
         {
+            loglabel.Text = "";
             ProcessKill("ClassM_Client");
             ProcessKill("ClassM_Client_Service");
             ProcessKill("client32");
