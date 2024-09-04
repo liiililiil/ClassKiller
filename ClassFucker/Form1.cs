@@ -107,76 +107,76 @@ namespace ClassFucker
 
         // 너비 우선 탐색으로 파일 찾기
         static async Task<string> DFSFolderFind(string[] targetFolderName, ProgressBar progressBar, TextBox loglabel, CancellationToken cancellationToken)
-    {
-        Queue<string> directoriesToSearch = new Queue<string>();
-        int totalDirectories = 0;
-        int processedDirectories = 0;
-
-        // 모든 드라이브의 루트 디렉토리를 큐에 추가
-        foreach (DriveInfo drive in DriveInfo.GetDrives())
         {
-            if (drive.IsReady)
+            Queue<string> directoriesToSearch = new Queue<string>();
+            int totalDirectories = 0;
+            int processedDirectories = 0;
+
+            // 모든 드라이브의 루트 디렉토리를 큐에 추가
+            foreach (DriveInfo drive in DriveInfo.GetDrives())
             {
-                directoriesToSearch.Enqueue(drive.RootDirectory.FullName);
-                totalDirectories++;
-            }
-        }
-
-        while (directoriesToSearch.Count > 0)
-        {
-
-            string currentDirectory = directoriesToSearch.Dequeue();
-            processedDirectories++;
-            progressBar.Value = (int)((double)processedDirectories / totalDirectories * 100);
-            loglabel.Text = $"{targetFolderName[0]}를 찾는중 : {currentDirectory}" + Environment.NewLine;
-
-                // 취소 요청 확인
-                if (cancellationToken.IsCancellationRequested)
-            {
-                loglabel.Text += "전체 탐색이 중단됨" + Environment.NewLine;
-                return null;
-            }
-
-            try
-            {
-                // 비동기적으로 하위 디렉토리 탐색
-                string[] directories = await Task.Run(() => Directory.GetDirectories(currentDirectory), cancellationToken);
-
-                foreach (string directory in directories)
+                if (drive.IsReady)
                 {
-                    foreach (string target in targetFolderName)
-                    {
-                        if (Path.GetFileName(directory).Equals(target, StringComparison.OrdinalIgnoreCase))
-                        {
-                            loglabel.Text += $"{targetFolderName[0]} 가 발견됨! {directory}";
-                            return directory;
-                        }
-                    }
-
-                    directoriesToSearch.Enqueue(directory);
+                    directoriesToSearch.Enqueue(drive.RootDirectory.FullName);
                     totalDirectories++;
                 }
             }
-            catch (UnauthorizedAccessException)
+
+            while (directoriesToSearch.Count > 0)
             {
-                // 권한이 없는 경우 계속 진행
-                continue;
+
+                string currentDirectory = directoriesToSearch.Dequeue();
+                processedDirectories++;
+                progressBar.Value = (int)((double)processedDirectories / totalDirectories * 100);
+                loglabel.Text = $"{targetFolderName[0]}를 찾는중 : {currentDirectory}" + Environment.NewLine;
+
+                // 취소 요청 확인
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    loglabel.Text += "전체 탐색이 중단됨" + Environment.NewLine;
+                    return null;
+                }
+
+                try
+                {
+                    // 비동기적으로 하위 디렉토리 탐색
+                    string[] directories = await Task.Run(() => Directory.GetDirectories(currentDirectory), cancellationToken);
+
+                    foreach (string directory in directories)
+                    {
+                        foreach (string target in targetFolderName)
+                        {
+                            if (Path.GetFileName(directory).Equals(target, StringComparison.OrdinalIgnoreCase))
+                            {
+                                loglabel.Text += $"{targetFolderName[0]} 가 발견됨! {directory}";
+                                return directory;
+                            }
+                        }
+
+                        directoriesToSearch.Enqueue(directory);
+                        totalDirectories++;
+                    }
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    // 권한이 없는 경우 계속 진행
+                    continue;
+                }
+                catch (OperationCanceledException)
+                {
+                    // 취소된 경우, 로그를 업데이트하고 null 반환
+                    loglabel.Text += "작업이 취소되었습니다." + Environment.NewLine;
+                    return null;
+                }
             }
-            catch (OperationCanceledException)
-            {
-                // 취소된 경우, 로그를 업데이트하고 null 반환
-                loglabel.Text += "작업이 취소되었습니다." + Environment.NewLine;
-                return null;
-            }
+
+            return null;
         }
 
-        return null;
-    }
 
 
-
-    ////// 처리 함수들 //////
-    public async Task isolation() //격리
+        ////// 처리 함수들 //////
+        public async Task isolation() //격리
         {
             loglabel.Text = "";
             progressBar1.Value = 0;
@@ -315,7 +315,7 @@ namespace ClassFucker
             SilenceProcessKill("StartMenuExperienceHost");
             SilenceProcessKill("BarClientView");
             SilenceProcessKill("Launcher Start");
-            loglabel.Text += $"일괄종료 완료됨"+ Environment.NewLine;
+            loglabel.Text += $"일괄종료 완료됨" + Environment.NewLine;
 
         }
         public void SilenceProcessKill(string name)
@@ -347,7 +347,7 @@ namespace ClassFucker
                 Process.Start(name);
                 loglabel.Text += $"{name}(을)를 실행함 " + Environment.NewLine;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 loglabel.Text += $"{name} (이)가 실행되지않음 " + Environment.NewLine;
             }
@@ -531,7 +531,7 @@ namespace ClassFucker
 
             }
 
-            if(checkBox2.Checked == true)
+            if (checkBox2.Checked == true)
             {
                 try
                 {
@@ -549,10 +549,51 @@ namespace ClassFucker
                 }
                 catch
                 {
-                    
+
                 }
             }
         }
 
+
+        private void start_Click(object sender, EventArgs e) //켜기
+        {
+
+            ProcessStart(Path.Combine(classMPath, "ClassM_Client.exe"));
+            ProcessStart(Path.Combine(classMPath, "ClassM_Client_Service.exe"));
+            ProcessStart(Path.Combine(classMPath, "mvnc.exe"));
+            ProcessStart(Path.Combine(classMPath, "SysCtrl.exe"));
+            ProcessStart(Path.Combine(classMPath, "hscagent.exe"));
+            ProcessStart(Path.Combine(netSupportPath, "client32.exe"));
+            ProcessStart(Path.Combine(netSupportPath, "StudentUI.exe"));
+            ProcessStart(Path.Combine(netSupportPath, "NSToast.exe"));
+            ProcessStart(Path.Combine(netSupportPath, "ClassicStartMenu.exe"));
+            ProcessStart(Path.Combine(netSupportPath, "nspowershell.exe"));
+            ProcessStart(Path.Combine(netSupportPath, "NSClientTB.exe"));
+            ProcessStart(Path.Combine(netSupportPath, "Runplugin64.exe"));
+            ProcessStart(Path.Combine(netSupportPath, "runplugin.exe"));
+
+        }
+
+        private void stop_Click(object sender, EventArgs e) //끄기
+        {
+            ProcessKill("ClassM_Client");
+            ProcessKill("ClassM_Client_Service");
+            ProcessKill("client32");
+            ProcessKill("Runplugin64");
+            ProcessKill("runplugin");
+            ProcessKill("SysCtrl");
+            ProcessKill("mvnc");
+            ProcessKill("hscagent");
+            ProcessKill("CertTool");
+            ProcessKill("hscdm");
+            ProcessKill("hscfm");
+            ProcessKill("hscrelay");
+            ProcessKill("ClassicStartMenu");
+            ProcessKill("P2PSyncService");
+            ProcessKill("BarMonitor");
+            ProcessKill("StartMenuExperienceHost");
+            ProcessKill("BarClientView");
+            ProcessKill("Launcher Start");
+        }
     }
 }
