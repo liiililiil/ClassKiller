@@ -231,15 +231,9 @@ namespace ClassFucker
                 loglabel.Text += "ClassM이 격리된 흔적이 발견되지 않아 건너뜀 " + Environment.NewLine;
             else
             {
-                XCopy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ClassM"), classMPath, loglabel);
-                loglabel.Text += "7초뒤 일괄 실행됩니다." + Environment.NewLine;
-                Task.Delay(7000).Wait();
-                ProcessStart(Path.Combine(classMPath, "ClassM_Client.exe"));
-                ProcessStart(Path.Combine(classMPath, "ClassM_Client_Service.exe"));
-                ProcessStart(Path.Combine(classMPath, "mvnc.exe"));
-                ProcessStart(Path.Combine(classMPath, "SysCtrl.exe"));
-                ProcessStart(Path.Combine(classMPath, "hscagent.exe"));
+                await XCopy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ClassM"), classMPath, loglabel);
                 File.Delete(Path.Combine(classMPath, "ClassMIsolation.txt"));
+
                 loglabel.Text += $"ClassM 작업 완료 " + Environment.NewLine;
             }
 
@@ -253,22 +247,16 @@ namespace ClassFucker
             else
             {
                 XCopy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NetSupport"), netSupportPath, loglabel);
-                loglabel.Text += "7초뒤 일괄 실행됩니다." + Environment.NewLine;
-                Task.Delay(7000).Wait();
-                ProcessStart(Path.Combine(netSupportPath, "client32.exe"));
-                ProcessStart(Path.Combine(netSupportPath, "StudentUI.exe"));
-                ProcessStart(Path.Combine(netSupportPath, "NSToast.exe"));
-                ProcessStart(Path.Combine(netSupportPath, "ClassicStartMenu.exe"));
-                ProcessStart(Path.Combine(netSupportPath, "nspowershell.exe"));
-                ProcessStart(Path.Combine(netSupportPath, "NSClientTB.exe"));
-                ProcessStart(Path.Combine(netSupportPath, "Runplugin64.exe"));
-                ProcessStart(Path.Combine(netSupportPath, "runplugin.exe"));
                 File.Delete(Path.Combine(netSupportPath, "NetSupportPathIsolation.txt"));
+
                 loglabel.Text += $"NetSupport 작업 완료 " + Environment.NewLine;
             }
             progressBar1.Value = 100;
 
-            loglabel.Text += "작업 완료됨" + Environment.NewLine;
+            loglabel.Text += "프로세스 실행 준비됨" + Environment.NewLine;
+            await Task.Delay(3000);
+            startpro();
+            loglabel.Text += "프로세스 실행완료" + Environment.NewLine;
 
         }
 
@@ -351,7 +339,7 @@ namespace ClassFucker
             }
             catch (Exception ex)
             {
-                loglabel.Text += $"{name} (이)가 실행되지않음 " + Environment.NewLine;
+                loglabel.Text += $"{name} (이)가 실행되지않음 {ex}" + Environment.NewLine;
             }
 
         }
@@ -558,7 +546,11 @@ namespace ClassFucker
         private void start_Click(object sender, EventArgs e) //켜기
         {
             loglabel.Text = "";
-            if(classMPath != null)
+            startpro();
+        }
+        private void startpro()
+        {
+            if (classMPath != null)
             {
                 ProcessStart(Path.Combine(classMPath, "ClassM_Client.exe"));
                 ProcessStart(Path.Combine(classMPath, "ClassM_Client_Service.exe"));
@@ -580,7 +572,6 @@ namespace ClassFucker
             }
 
         }
-
         private void stop_Click(object sender, EventArgs e) //끄기
         {
             loglabel.Text = "";
