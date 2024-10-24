@@ -1,5 +1,6 @@
 
 using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.Logging;
 using System.Diagnostics;
 using System.Xml.Linq;
 
@@ -8,6 +9,7 @@ namespace ClassFucker
 {
     public partial class Form1 : Form
     {
+        private static bool isOff;
         private static bool callstop = false;
         private string classMPath;
         private string netSupportPath;
@@ -84,22 +86,29 @@ namespace ClassFucker
                 cts?.Cancel(); // 기존에 존재하는 경우 취소
                 cts = new CancellationTokenSource();
                 CancellationToken token = cts.Token;
+                string result;
 
                 // 클래스 M 폴더 탐색
-                classMPath = null;
-                string result = await DFSFolderFind(new[] { "ClassM", "ClassM Client" }, progressBar1, loglabel, token);
-                if (result == null)
-                    classMinfo.Text = "발견되지않음";
-                else
-                    SetClassMPath(Path.Combine(result, "hscagent.exe"));
+                if (classMPath == null)
+                {
+                    result = await DFSFolderFind(new[] { "ClassM", "ClassM Client" }, progressBar1, loglabel, token);
+                    if (result == null)
+                        classMinfo.Text = "발견되지않음";
+                    else
+                        SetClassMPath(Path.Combine(result, "hscagent.exe"));
+
+                }
 
                 // NetSupport School 폴더 탐색
-                netSupportPath = null;
-                result = await DFSFolderFind(new[] { "NetSupport School" }, progressBar1, loglabel, token);
-                if (result == null)
-                    netSupportInfo.Text = "발견되지않음";
-                else
-                    SetNetSupportPath(Path.Combine(result, "client32.exe"));
+                if (netSupportPath == null)
+                {
+                    result = await DFSFolderFind(new[] { "NetSupport School" }, progressBar1, loglabel, token);
+                    if (result == null)
+                        netSupportInfo.Text = "발견되지않음";
+                    else
+                        SetNetSupportPath(Path.Combine(result, "client32.exe"));
+
+                }
 
                 loglabel.Text += "전체 탐색 완료됨" + Environment.NewLine;
             }
@@ -475,60 +484,39 @@ namespace ClassFucker
             classMinfo.Text = "발견됨! 주소: " + classMPath;
         }
 
-
-
-
         ////// 이벤트 함수들 //////
-
-        private async void AllSc_Click(object sender, EventArgs e)
-        {
-            netSupportInfo.Text = "성능과 시간이 소모됩니다.";
-            classMinfo.Text = "탐색중...";
-            progressBar1.Value = 0;
-            await Task.WhenAll(AllScan());
-            progressBar1.Value = 100;
-        }
-
         private async void _isolation_Click(object sender, EventArgs e)
         {
             await isolation();
         }
-
         private void _Restoration_Click(object sender, EventArgs e)
         {
             Restoration();
         }
-
-        private void FastSc_Click_1(object sender, EventArgs e)
-        {
-            progressBar1.Value = 0;
-            FastScan();
-
-        }
-
         private async void timer1_Tick(object sender, EventArgs e)
         {
-            if (tryrestore == false && checkBox1.Checked == true && !Process.GetProcessesByName("explorer").Any())
-            {
-                tryrestore = true;
-                await AllScan();
-                await isolation();
-                ProcessStart("Explorer");
-                MessageBox.Show("복구 시도를 완료하였습니다.");
-                tryrestore = false;
 
-            }
-
-            if (checkBox2.Checked == true)
+            if (isOff)
             {
                 try
                 {
                     SilenceProcessKill("ClassM_Client");
                     SilenceProcessKill("ClassM_Client_Service");
-                    SilenceProcessKill("mvnc");
-                    SilenceProcessKill("SysCtrl");
-                    SilenceProcessKill("hscagent");
                     SilenceProcessKill("client32");
+                    SilenceProcessKill("Runplugin64");
+                    SilenceProcessKill("runplugin");
+                    SilenceProcessKill("SysCtrl");
+                    SilenceProcessKill("mvnc");
+                    SilenceProcessKill("hscagent");
+                    SilenceProcessKill("CertTool");
+                    SilenceProcessKill("hscdm");
+                    SilenceProcessKill("hscfm");
+                    SilenceProcessKill("hscrelay");
+                    SilenceProcessKill("P2PSyncService");
+                    SilenceProcessKill("BarMonitor");
+                    SilenceProcessKill("StartMenuExperienceHost");
+                    SilenceProcessKill("BarClientView");
+                    SilenceProcessKill("Launcher Start");
                     SilenceProcessKill("StudentUI");
                     SilenceProcessKill("NSToast");
                     SilenceProcessKill("ClassicStartMenu");
@@ -541,12 +529,11 @@ namespace ClassFucker
                 }
             }
         }
-
-
         private void start_Click(object sender, EventArgs e) //켜기
         {
             loglabel.Text = "";
             startpro();
+            isOff = false;
         }
         private void startpro()
         {
@@ -575,24 +562,32 @@ namespace ClassFucker
         private void stop_Click(object sender, EventArgs e) //끄기
         {
             loglabel.Text = "";
-            ProcessKill("ClassM_Client");
-            ProcessKill("ClassM_Client_Service");
-            ProcessKill("client32");
-            ProcessKill("Runplugin64");
-            ProcessKill("runplugin");
-            ProcessKill("SysCtrl");
-            ProcessKill("mvnc");
-            ProcessKill("hscagent");
-            ProcessKill("CertTool");
-            ProcessKill("hscdm");
-            ProcessKill("hscfm");
-            ProcessKill("hscrelay");
-            ProcessKill("ClassicStartMenu");
-            ProcessKill("P2PSyncService");
-            ProcessKill("BarMonitor");
-            ProcessKill("StartMenuExperienceHost");
-            ProcessKill("BarClientView");
-            ProcessKill("Launcher Start");
+            isOff = true;
+
+        }
+
+        private void Sc_Click(object sender, EventArgs e)
+        {
+            classMPath = null; netSupportPath = null;
+            progressBar1.Value = 0;
+            FastScan();
+            if (classMPath == null || netSupportPath == null)
+            {
+                loglabel.Text += "일부가 발견되지 않아 전체 탐색합니다." + Environment.NewLine;
+                AllScan();
+            }
+        }
+
+        private async void TempTurnOn_Click(object sender, EventArgs e)
+        {
+            isOff = false;
+            await Task.Delay(30000);
+            isOff = true;
+        }
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+
         }
     }
 }

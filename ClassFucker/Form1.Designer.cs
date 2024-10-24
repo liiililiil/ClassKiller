@@ -37,23 +37,23 @@
             netSupportInfo = new Label();
             classMinfo = new Label();
             tableLayoutPanel2 = new TableLayoutPanel();
-            FastSc = new Button();
-            AllSc = new Button();
+            Sc = new Button();
+            TempTurnOn = new Button();
             _Restoration = new Button();
             _isolation = new Button();
-            checkBox1 = new CheckBox();
-            checkBox2 = new CheckBox();
             start = new Button();
             stop = new Button();
             loglabel = new TextBox();
             timer1 = new System.Windows.Forms.Timer(components);
-            toolTip1 = new ToolTip(components);
+            trackBar1 = new TrackBar();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
             SuspendLayout();
             // 
             // tableLayoutPanel1
             // 
+            tableLayoutPanel1.AutoScroll = true;
             tableLayoutPanel1.AutoSize = true;
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
@@ -70,24 +70,24 @@
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 10;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 81F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 28F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 80F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 10F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 25F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 25F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 10F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 25F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 25F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 10F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
-            tableLayoutPanel1.Size = new Size(528, 347);
+            tableLayoutPanel1.Size = new Size(365, 309);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // progressBar1
             // 
             progressBar1.Dock = DockStyle.Fill;
-            progressBar1.Location = new Point(3, 320);
+            progressBar1.Location = new Point(3, 282);
             progressBar1.Name = "progressBar1";
-            progressBar1.Size = new Size(522, 24);
+            progressBar1.Size = new Size(359, 24);
             progressBar1.TabIndex = 0;
             // 
             // label1
@@ -95,9 +95,9 @@
             label1.AutoSize = true;
             label1.BorderStyle = BorderStyle.FixedSingle;
             label1.Dock = DockStyle.Fill;
-            label1.Location = new Point(3, 252);
+            label1.Location = new Point(3, 219);
             label1.Name = "label1";
-            label1.Size = new Size(522, 20);
+            label1.Size = new Size(359, 25);
             label1.TabIndex = 1;
             label1.Text = "NetSupport";
             label1.TextAlign = ContentAlignment.MiddleLeft;
@@ -106,9 +106,9 @@
             // 
             label2.BorderStyle = BorderStyle.FixedSingle;
             label2.Dock = DockStyle.Fill;
-            label2.Location = new Point(3, 182);
+            label2.Location = new Point(3, 159);
             label2.Name = "label2";
-            label2.Size = new Size(522, 20);
+            label2.Size = new Size(359, 25);
             label2.TabIndex = 2;
             label2.Text = "ClassM";
             label2.TextAlign = ContentAlignment.MiddleLeft;
@@ -118,9 +118,9 @@
             netSupportInfo.AutoSize = true;
             netSupportInfo.Dock = DockStyle.Fill;
             netSupportInfo.ImageAlign = ContentAlignment.MiddleLeft;
-            netSupportInfo.Location = new Point(3, 272);
+            netSupportInfo.Location = new Point(3, 244);
             netSupportInfo.Name = "netSupportInfo";
-            netSupportInfo.Size = new Size(522, 20);
+            netSupportInfo.Size = new Size(359, 25);
             netSupportInfo.TabIndex = 3;
             netSupportInfo.Text = "알수없음";
             // 
@@ -128,9 +128,9 @@
             // 
             classMinfo.AutoSize = true;
             classMinfo.Dock = DockStyle.Fill;
-            classMinfo.Location = new Point(3, 202);
+            classMinfo.Location = new Point(3, 184);
             classMinfo.Name = "classMinfo";
-            classMinfo.Size = new Size(522, 20);
+            classMinfo.Size = new Size(359, 25);
             classMinfo.TabIndex = 4;
             classMinfo.Text = "알수없음";
             classMinfo.TextAlign = ContentAlignment.MiddleLeft;
@@ -138,65 +138,62 @@
             // tableLayoutPanel2
             // 
             tableLayoutPanel2.AutoSize = true;
-            tableLayoutPanel2.ColumnCount = 8;
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25.0000057F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel2.Controls.Add(FastSc, 2, 0);
-            tableLayoutPanel2.Controls.Add(AllSc, 2, 2);
+            tableLayoutPanel2.ColumnCount = 7;
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 90F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 90F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 90F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 90F));
+            tableLayoutPanel2.Controls.Add(trackBar1, 0, 2);
+            tableLayoutPanel2.Controls.Add(Sc, 2, 0);
+            tableLayoutPanel2.Controls.Add(TempTurnOn, 2, 2);
             tableLayoutPanel2.Controls.Add(_Restoration, 4, 2);
             tableLayoutPanel2.Controls.Add(_isolation, 4, 0);
-            tableLayoutPanel2.Controls.Add(checkBox1, 0, 0);
-            tableLayoutPanel2.Controls.Add(checkBox2, 0, 2);
             tableLayoutPanel2.Controls.Add(start, 6, 0);
             tableLayoutPanel2.Controls.Add(stop, 6, 2);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
-            tableLayoutPanel2.Location = new Point(3, 76);
+            tableLayoutPanel2.Location = new Point(3, 72);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 3;
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 42.63039F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 14.7392311F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 42.6303825F));
-            tableLayoutPanel2.Size = new Size(522, 75);
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+            tableLayoutPanel2.Size = new Size(359, 74);
             tableLayoutPanel2.TabIndex = 5;
             // 
-            // FastSc
+            // Sc
             // 
-            FastSc.AutoSize = true;
-            FastSc.Dock = DockStyle.Fill;
-            FastSc.Location = new Point(133, 3);
-            FastSc.Name = "FastSc";
-            FastSc.Size = new Size(104, 25);
-            FastSc.TabIndex = 0;
-            FastSc.Text = "빠른 탐색";
-            FastSc.UseVisualStyleBackColor = true;
-            FastSc.Click += FastSc_Click_1;
+            Sc.AutoSize = true;
+            Sc.Dock = DockStyle.Fill;
+            Sc.Location = new Point(93, 3);
+            Sc.Name = "Sc";
+            Sc.Size = new Size(84, 24);
+            Sc.TabIndex = 0;
+            Sc.Text = "탐색";
+            Sc.UseVisualStyleBackColor = true;
+            Sc.Click += Sc_Click;
             // 
-            // AllSc
+            // TempTurnOn
             // 
-            AllSc.AutoSize = true;
-            AllSc.Dock = DockStyle.Fill;
-            AllSc.Location = new Point(133, 45);
-            AllSc.Name = "AllSc";
-            AllSc.Size = new Size(104, 27);
-            AllSc.TabIndex = 1;
-            AllSc.Text = "전체 탐색";
-            AllSc.UseVisualStyleBackColor = true;
-            AllSc.Click += AllSc_Click;
+            TempTurnOn.AutoSize = true;
+            TempTurnOn.Dock = DockStyle.Fill;
+            TempTurnOn.Location = new Point(93, 47);
+            TempTurnOn.Name = "TempTurnOn";
+            TempTurnOn.Size = new Size(84, 24);
+            TempTurnOn.TabIndex = 1;
+            TempTurnOn.Text = "잠시 켜기";
+            TempTurnOn.UseVisualStyleBackColor = true;
+            TempTurnOn.Click += TempTurnOn_Click;
             // 
             // _Restoration
             // 
             _Restoration.Dock = DockStyle.Fill;
-            _Restoration.Location = new Point(263, 45);
+            _Restoration.Location = new Point(183, 47);
             _Restoration.Name = "_Restoration";
-            _Restoration.Size = new Size(104, 27);
+            _Restoration.Size = new Size(84, 24);
             _Restoration.TabIndex = 3;
             _Restoration.Text = "복구";
             _Restoration.UseVisualStyleBackColor = true;
@@ -205,42 +202,20 @@
             // _isolation
             // 
             _isolation.Dock = DockStyle.Fill;
-            _isolation.Location = new Point(263, 3);
+            _isolation.Location = new Point(183, 3);
             _isolation.Name = "_isolation";
-            _isolation.Size = new Size(104, 25);
+            _isolation.Size = new Size(84, 24);
             _isolation.TabIndex = 4;
             _isolation.Text = "격리";
             _isolation.UseVisualStyleBackColor = true;
             _isolation.Click += _isolation_Click;
             // 
-            // checkBox1
-            // 
-            checkBox1.AutoSize = true;
-            checkBox1.Dock = DockStyle.Fill;
-            checkBox1.Location = new Point(3, 3);
-            checkBox1.Name = "checkBox1";
-            checkBox1.Size = new Size(104, 25);
-            checkBox1.TabIndex = 5;
-            checkBox1.Text = "제어감지";
-            checkBox1.UseVisualStyleBackColor = true;
-            // 
-            // checkBox2
-            // 
-            checkBox2.AutoSize = true;
-            checkBox2.Dock = DockStyle.Fill;
-            checkBox2.Location = new Point(3, 45);
-            checkBox2.Name = "checkBox2";
-            checkBox2.Size = new Size(104, 27);
-            checkBox2.TabIndex = 6;
-            checkBox2.Text = "상시종료";
-            checkBox2.UseVisualStyleBackColor = true;
-            // 
             // start
             // 
             start.Dock = DockStyle.Fill;
-            start.Location = new Point(393, 3);
+            start.Location = new Point(273, 3);
             start.Name = "start";
-            start.Size = new Size(104, 25);
+            start.Size = new Size(84, 24);
             start.TabIndex = 7;
             start.Text = "켜기";
             start.UseVisualStyleBackColor = true;
@@ -249,9 +224,9 @@
             // stop
             // 
             stop.Dock = DockStyle.Fill;
-            stop.Location = new Point(393, 45);
+            stop.Location = new Point(273, 47);
             stop.Name = "stop";
-            stop.Size = new Size(104, 27);
+            stop.Size = new Size(84, 24);
             stop.TabIndex = 8;
             stop.Text = "끄기";
             stop.UseVisualStyleBackColor = true;
@@ -265,7 +240,7 @@
             loglabel.Name = "loglabel";
             loglabel.ReadOnly = true;
             loglabel.ScrollBars = ScrollBars.Both;
-            loglabel.Size = new Size(522, 67);
+            loglabel.Size = new Size(359, 63);
             loglabel.TabIndex = 6;
             loglabel.TabStop = false;
             loglabel.Text = "로그창";
@@ -275,19 +250,33 @@
             timer1.Enabled = true;
             timer1.Tick += timer1_Tick;
             // 
+            // trackBar1
+            // 
+            trackBar1.Location = new Point(3, 47);
+            trackBar1.Maximum = 120;
+            trackBar1.Minimum = 10;
+            trackBar1.Name = "trackBar1";
+            trackBar1.Size = new Size(84, 24);
+            trackBar1.TabIndex = 1;
+            trackBar1.Value = 10;
+            trackBar1.Scroll += trackBar1_Scroll;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(528, 347);
+            AutoScroll = true;
+            ClientSize = new Size(365, 309);
             Controls.Add(tableLayoutPanel1);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MinimumSize = new Size(381, 348);
             Name = "Form1";
             Text = "abiectio";
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)trackBar1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -304,17 +293,15 @@
         private Label label2;
         private Label netSupportInfo;
         private TableLayoutPanel tableLayoutPanel2;
-        private Button FastSc;
-        private Button AllSc;
+        private Button Sc;
         private Button _isolation;
         private ProgressBar progressBar1;
         private Label classMinfo;
         private System.Windows.Forms.Timer timer1;
-        private CheckBox checkBox1;
         private TextBox loglabel;
-        private CheckBox checkBox2;
         private Button start;
         private Button stop;
-        private ToolTip toolTip1;
+        private Button TempTurnOn;
+        private TrackBar trackBar1;
     }
 }
