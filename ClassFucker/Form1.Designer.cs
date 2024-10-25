@@ -37,15 +37,16 @@
             netSupportInfo = new Label();
             classMinfo = new Label();
             tableLayoutPanel2 = new TableLayoutPanel();
+            trackBar1 = new TrackBar();
             Sc = new Button();
             TempTurnOn = new Button();
             _Restoration = new Button();
             _isolation = new Button();
             start = new Button();
             stop = new Button();
+            label5 = new Label();
             loglabel = new TextBox();
             timer1 = new System.Windows.Forms.Timer(components);
-            trackBar1 = new TrackBar();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
@@ -153,6 +154,7 @@
             tableLayoutPanel2.Controls.Add(_isolation, 4, 0);
             tableLayoutPanel2.Controls.Add(start, 6, 0);
             tableLayoutPanel2.Controls.Add(stop, 6, 2);
+            tableLayoutPanel2.Controls.Add(label5, 0, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
             tableLayoutPanel2.Location = new Point(3, 72);
@@ -163,6 +165,17 @@
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
             tableLayoutPanel2.Size = new Size(359, 74);
             tableLayoutPanel2.TabIndex = 5;
+            // 
+            // trackBar1
+            // 
+            trackBar1.Location = new Point(3, 47);
+            trackBar1.Maximum = 300;
+            trackBar1.Minimum = 10;
+            trackBar1.Name = "trackBar1";
+            trackBar1.Size = new Size(84, 24);
+            trackBar1.TabIndex = 1;
+            trackBar1.Value = 10;
+            trackBar1.Scroll += trackBar1_Scroll;
             // 
             // Sc
             // 
@@ -184,7 +197,7 @@
             TempTurnOn.Name = "TempTurnOn";
             TempTurnOn.Size = new Size(84, 24);
             TempTurnOn.TabIndex = 1;
-            TempTurnOn.Text = "잠시 켜기";
+            TempTurnOn.Text = "잠시 실행";
             TempTurnOn.UseVisualStyleBackColor = true;
             TempTurnOn.Click += TempTurnOn_Click;
             // 
@@ -232,6 +245,18 @@
             stop.UseVisualStyleBackColor = true;
             stop.Click += stop_Click;
             // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Dock = DockStyle.Fill;
+            label5.ImageAlign = ContentAlignment.BottomCenter;
+            label5.Location = new Point(3, 0);
+            label5.Name = "label5";
+            label5.Size = new Size(84, 30);
+            label5.TabIndex = 9;
+            label5.Text = "label5";
+            label5.TextAlign = ContentAlignment.BottomCenter;
+            // 
             // loglabel
             // 
             loglabel.Dock = DockStyle.Fill;
@@ -249,17 +274,6 @@
             // 
             timer1.Enabled = true;
             timer1.Tick += timer1_Tick;
-            // 
-            // trackBar1
-            // 
-            trackBar1.Location = new Point(3, 47);
-            trackBar1.Maximum = 120;
-            trackBar1.Minimum = 10;
-            trackBar1.Name = "trackBar1";
-            trackBar1.Size = new Size(84, 24);
-            trackBar1.TabIndex = 1;
-            trackBar1.Value = 10;
-            trackBar1.Scroll += trackBar1_Scroll;
             // 
             // Form1
             // 
@@ -303,5 +317,6 @@
         private Button stop;
         private Button TempTurnOn;
         private TrackBar trackBar1;
+        private Label label5;
     }
 }

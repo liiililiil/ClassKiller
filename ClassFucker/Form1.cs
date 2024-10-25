@@ -22,6 +22,7 @@ namespace ClassFucker
             InitializeComponent();
             loglabel.ReadOnly = true;
             FastScan();
+            label5.Text = trackBar1.Value + "초";
         }
 
 
@@ -531,7 +532,7 @@ namespace ClassFucker
         }
         private void start_Click(object sender, EventArgs e) //켜기
         {
-            loglabel.Text = "";
+            loglabel.Text = "프로그램 시작" + Environment.NewLine;
             startpro();
             isOff = false;
         }
@@ -561,7 +562,7 @@ namespace ClassFucker
         }
         private void stop_Click(object sender, EventArgs e) //끄기
         {
-            loglabel.Text = "";
+            loglabel.Text = "프로그램 종료" + Environment.NewLine;
             isOff = true;
 
         }
@@ -581,13 +582,19 @@ namespace ClassFucker
         private async void TempTurnOn_Click(object sender, EventArgs e)
         {
             isOff = false;
-            await Task.Delay(30000);
+            if (trackBar1.Value >= 60) loglabel.Text = (trackBar1.Value / 60) + "분" + (trackBar1.Value % 60) + "초";
+            else loglabel.Text = trackBar1.Value + "초";
+            loglabel.Text += "동안 잠시 실행됨" + Environment.NewLine;
+
+            await Task.Delay(trackBar1.Value *1000);
+            loglabel.Text += "지정한 시간이 되어 프로그램 종료됨" + Environment.NewLine;
             isOff = true;
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
-
+            if(trackBar1.Value >=60) label5.Text = (trackBar1.Value/60) + "분" + (trackBar1.Value % 60) + "초";
+            else label5.Text = trackBar1.Value + "초";
         }
     }
 }
