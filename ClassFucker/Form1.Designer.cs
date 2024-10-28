@@ -139,21 +139,21 @@
             // tableLayoutPanel2
             // 
             tableLayoutPanel2.AutoSize = true;
-            tableLayoutPanel2.ColumnCount = 7;
+            tableLayoutPanel2.ColumnCount = 5;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 90F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 90F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 90F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 90F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
             tableLayoutPanel2.Controls.Add(trackBar1, 0, 2);
             tableLayoutPanel2.Controls.Add(Sc, 2, 0);
             tableLayoutPanel2.Controls.Add(TempTurnOn, 2, 2);
-            tableLayoutPanel2.Controls.Add(_Restoration, 4, 2);
-            tableLayoutPanel2.Controls.Add(_isolation, 4, 0);
-            tableLayoutPanel2.Controls.Add(start, 6, 0);
-            tableLayoutPanel2.Controls.Add(stop, 6, 2);
+            tableLayoutPanel2.Controls.Add(_Restoration, 3, 2);
+            tableLayoutPanel2.Controls.Add(_isolation, 3, 0);
+            tableLayoutPanel2.Controls.Add(start, 4, 0);
+            tableLayoutPanel2.Controls.Add(stop, 4, 2);
             tableLayoutPanel2.Controls.Add(label5, 0, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
@@ -181,7 +181,7 @@
             // 
             Sc.AutoSize = true;
             Sc.Dock = DockStyle.Fill;
-            Sc.Location = new Point(93, 3);
+            Sc.Location = new Point(92, 3);
             Sc.Name = "Sc";
             Sc.Size = new Size(84, 24);
             Sc.TabIndex = 0;
@@ -193,7 +193,7 @@
             // 
             TempTurnOn.AutoSize = true;
             TempTurnOn.Dock = DockStyle.Fill;
-            TempTurnOn.Location = new Point(93, 47);
+            TempTurnOn.Location = new Point(92, 47);
             TempTurnOn.Name = "TempTurnOn";
             TempTurnOn.Size = new Size(84, 24);
             TempTurnOn.TabIndex = 1;
@@ -204,7 +204,7 @@
             // _Restoration
             // 
             _Restoration.Dock = DockStyle.Fill;
-            _Restoration.Location = new Point(183, 47);
+            _Restoration.Location = new Point(182, 47);
             _Restoration.Name = "_Restoration";
             _Restoration.Size = new Size(84, 24);
             _Restoration.TabIndex = 3;
@@ -215,7 +215,7 @@
             // _isolation
             // 
             _isolation.Dock = DockStyle.Fill;
-            _isolation.Location = new Point(183, 3);
+            _isolation.Location = new Point(182, 3);
             _isolation.Name = "_isolation";
             _isolation.Size = new Size(84, 24);
             _isolation.TabIndex = 4;
@@ -226,7 +226,7 @@
             // start
             // 
             start.Dock = DockStyle.Fill;
-            start.Location = new Point(273, 3);
+            start.Location = new Point(272, 3);
             start.Name = "start";
             start.Size = new Size(84, 24);
             start.TabIndex = 7;
@@ -237,7 +237,7 @@
             // stop
             // 
             stop.Dock = DockStyle.Fill;
-            stop.Location = new Point(273, 47);
+            stop.Location = new Point(272, 47);
             stop.Name = "stop";
             stop.Size = new Size(84, 24);
             stop.TabIndex = 8;

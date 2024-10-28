@@ -2,19 +2,45 @@
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.Logging;
 using System.Diagnostics;
+using System;
+using System.Runtime.InteropServices;
+using Microsoft.Win32;
 using System.Xml.Linq;
 
 
 namespace ClassFucker
 {
+
     public partial class Form1 : Form
     {
+        Guid driverGuid = new Guid("4d36e96b-e325-11ce-bfc1-08002be10318");
         private static bool isOff;
         private static bool callstop = false;
         private string classMPath;
         private string netSupportPath;
         private bool tryrestore;
         private CancellationTokenSource cts;
+
+        [DllImport("setupapi.dll")]
+        public static extern bool SetupDiCallClassInstaller(uint InstallFunction, IntPtr DeviceInfoSet, IntPtr DeviceInfoData);
+
+        [DllImport("setupapi.dll", SetLastError = true)]
+        public static extern IntPtr SetupDiCreateDeviceInfoList(ref Guid ClassGuid, IntPtr hwndParent);
+
+        [DllImport("setupapi.dll", SetLastError = true)]
+        public static extern bool SetupDiDestroyDeviceInfoList(IntPtr DeviceInfoSet);
+
+        [DllImport("setupapi.dll", SetLastError = true)]
+        public static extern bool SetupDiDeleteDeviceInfo(IntPtr DeviceInfoSet, ref SP_DEVINFO_DATA DeviceInfoData);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct SP_DEVINFO_DATA
+        {
+            public uint cbSize;
+            public Guid ClassGuid;
+            public uint DevInst;
+            public IntPtr Reserved;
+        }
 
         public Form1()
         {
@@ -186,6 +212,55 @@ namespace ClassFucker
 
 
         ////// 처리 함수들 //////
+        public static async Task RemoveDriverAsync(Guid driverGuid)
+        {
+        IntPtr deviceInfoSet = SetupDiCreateDeviceInfoList(ref driverGuid, IntPtr.Zero);
+        if (deviceInfoSet == IntPtr.Zero)
+        {
+            // 오류 처리
+            return;
+        }
+
+        SP_DEVINFO_DATA deviceInfoData = new SP_DEVINFO_DATA();
+        deviceInfoData.cbSize = (uint) Marshal.SizeOf(typeof(SP_DEVINFO_DATA));
+
+        // 드라이버 제거
+        if (!SetupDiDeleteDeviceInfo(deviceInfoSet, ref deviceInfoData))
+        {
+            // 오류 처리
+        }
+
+        // 1초 대기
+        await Task.Delay(1000);
+
+        // PnP 요청
+        SetupDiCallClassInstaller(0x00000001, deviceInfoSet, IntPtr.Zero); // 0x00000001은 DIC_REMOVE_DEVICE
+        SetupDiDestroyDeviceInfoList(deviceInfoSet);
+    }
+    private void startProcess()
+        {
+            if (classMPath != null)
+            {
+                ProcessStart(Path.Combine(classMPath, "ClassM_Client.exe"));
+                ProcessStart(Path.Combine(classMPath, "ClassM_Client_Service.exe"));
+                ProcessStart(Path.Combine(classMPath, "mvnc.exe"));
+                ProcessStart(Path.Combine(classMPath, "SysCtrl.exe"));
+                ProcessStart(Path.Combine(classMPath, "hscagent.exe"));
+            }
+
+            if (netSupportPath != null)
+            {
+                ProcessStart(Path.Combine(netSupportPath, "client32.exe"));
+                ProcessStart(Path.Combine(netSupportPath, "StudentUI.exe"));
+                ProcessStart(Path.Combine(netSupportPath, "NSToast.exe"));
+                ProcessStart(Path.Combine(netSupportPath, "ClassicStartMenu.exe"));
+                ProcessStart(Path.Combine(netSupportPath, "nspowershell.exe"));
+                ProcessStart(Path.Combine(netSupportPath, "NSClientTB.exe"));
+                ProcessStart(Path.Combine(netSupportPath, "Runplugin64.exe"));
+                ProcessStart(Path.Combine(netSupportPath, "runplugin.exe"));
+            }
+
+        }
         public async Task isolation() //격리
         {
             loglabel.Text = "";
@@ -265,12 +340,10 @@ namespace ClassFucker
 
             loglabel.Text += "프로세스 실행 준비됨" + Environment.NewLine;
             await Task.Delay(3000);
-            startpro();
+            startProcess();
             loglabel.Text += "프로세스 실행완료" + Environment.NewLine;
 
         }
-
-
         public void ProcessKill(string name)
         {
             try
@@ -353,8 +426,6 @@ namespace ClassFucker
             }
 
         }
-
-
         static async Task XCopy(string sourcePath, string destinationPath, TextBox loglabel)
         {
             // 소스와 목적지 디렉토리가 존재하지 않는 경우 예외 발생
@@ -400,7 +471,6 @@ namespace ClassFucker
 
             await Task.WhenAll(directoryTasks);
         }
-
         static async Task DeleteDirectoryAsync(string directoryPath, TextBox loglabel)
         {
             if (!Directory.Exists(directoryPath))
@@ -470,8 +540,6 @@ namespace ClassFucker
         }
 
 
-
-
         ////// 경로, 라벨 수정 함수 //////
         public void SetNetSupportPath(string path)
         {
@@ -533,32 +601,8 @@ namespace ClassFucker
         private void start_Click(object sender, EventArgs e) //켜기
         {
             loglabel.Text = "프로그램 시작" + Environment.NewLine;
-            startpro();
+            startProcess();
             isOff = false;
-        }
-        private void startpro()
-        {
-            if (classMPath != null)
-            {
-                ProcessStart(Path.Combine(classMPath, "ClassM_Client.exe"));
-                ProcessStart(Path.Combine(classMPath, "ClassM_Client_Service.exe"));
-                ProcessStart(Path.Combine(classMPath, "mvnc.exe"));
-                ProcessStart(Path.Combine(classMPath, "SysCtrl.exe"));
-                ProcessStart(Path.Combine(classMPath, "hscagent.exe"));
-            }
-
-            if (netSupportPath != null)
-            {
-                ProcessStart(Path.Combine(netSupportPath, "client32.exe"));
-                ProcessStart(Path.Combine(netSupportPath, "StudentUI.exe"));
-                ProcessStart(Path.Combine(netSupportPath, "NSToast.exe"));
-                ProcessStart(Path.Combine(netSupportPath, "ClassicStartMenu.exe"));
-                ProcessStart(Path.Combine(netSupportPath, "nspowershell.exe"));
-                ProcessStart(Path.Combine(netSupportPath, "NSClientTB.exe"));
-                ProcessStart(Path.Combine(netSupportPath, "Runplugin64.exe"));
-                ProcessStart(Path.Combine(netSupportPath, "runplugin.exe"));
-            }
-
         }
         private void stop_Click(object sender, EventArgs e) //끄기
         {
@@ -582,18 +626,21 @@ namespace ClassFucker
         private async void TempTurnOn_Click(object sender, EventArgs e)
         {
             isOff = false;
+            startProcess();
             if (trackBar1.Value >= 60) loglabel.Text = (trackBar1.Value / 60) + "분" + (trackBar1.Value % 60) + "초";
             else loglabel.Text = trackBar1.Value + "초";
             loglabel.Text += "동안 잠시 실행됨" + Environment.NewLine;
 
-            await Task.Delay(trackBar1.Value *1000);
+            await Task.Delay(trackBar1.Value * 1000);
+
+            await RemoveDriverAsync(driverGuid);
             loglabel.Text += "지정한 시간이 되어 프로그램 종료됨" + Environment.NewLine;
             isOff = true;
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
-            if(trackBar1.Value >=60) label5.Text = (trackBar1.Value/60) + "분" + (trackBar1.Value % 60) + "초";
+            if (trackBar1.Value >= 60) label5.Text = (trackBar1.Value / 60) + "분" + (trackBar1.Value % 60) + "초";
             else label5.Text = trackBar1.Value + "초";
         }
     }
