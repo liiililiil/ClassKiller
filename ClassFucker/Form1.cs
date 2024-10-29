@@ -633,7 +633,13 @@ namespace ClassFucker
 
             await Task.Delay(trackBar1.Value * 1000);
 
+
             await RemoveDriverAsync(driverGuid);
+
+            ProcessKill("explorer");
+            await Task.Delay(1000);
+            ProcessStart("explorer");
+            
             loglabel.Text += "지정한 시간이 되어 프로그램 종료됨" + Environment.NewLine;
             isOff = true;
         }
