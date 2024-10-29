@@ -48,33 +48,33 @@ namespace ClassFucker
             InitializeComponent();
             loglabel.ReadOnly = true;
             FastScan();
-            label5.Text = trackBar1.Value + "ÃÊ";
+            label5.Text = trackBar1.Value + "ì´ˆ";
         }
 
 
-        ////// ºü¸¥ ½ºÄµ ÇÔ¼öµé //////
+        ////// ë¹ ë¥¸ ìŠ¤ìº” í•¨ìˆ˜ë“¤ //////
         public void FastScan()
         {
             cts?.Cancel();
             classMPath = null;
-            loglabel.Text = $"ClassM ºü¸¥ Å½»öÁß.. " + Environment.NewLine;
-            if (Directory.Exists(@"C:\Program Files (x86)\Innosoft\ClassM Client")) // ¾Ë·ÁÁø ÁÖ¼Ò È®ÀÎ
+            loglabel.Text = $"ClassM ë¹ ë¥¸ íƒìƒ‰ì¤‘.. " + Environment.NewLine;
+            if (Directory.Exists(@"C:\Program Files (x86)\Innosoft\ClassM Client")) // ì•Œë ¤ì§„ ì£¼ì†Œ í™•ì¸
                 SetClassMPath(@"C:\Program Files (x86)\Innosoft\ClassM Client\classM_Client.exe");
 
-            else if (Directory.Exists(@"C:\Program Files (x86)\ClassM")) // ¾Ë·ÁÁø ÁÖ¼Ò È®ÀÎ2
+            else if (Directory.Exists(@"C:\Program Files (x86)\ClassM")) // ì•Œë ¤ì§„ ì£¼ì†Œ í™•ì¸2
                 SetClassMPath(@"C:\Program Files (x86)\ClassM\hscagent.exe");
             else
             {
-                // ÇÁ·Î¼¼½º¸¦ ÀÌ¿ëÇØ Å½»ö
+                // í”„ë¡œì„¸ìŠ¤ë¥¼ ì´ìš©í•´ íƒìƒ‰
                 Process[] process = Process.GetProcessesByName("hscagent");
 
                 if (process.Length == 0)
                 {
-                    // ´Ù¸¥ ÇÁ·Î¼¼½º ÀÌ¸§À» ÀÌ¿ëÇØ Å½»ö
+                    // ë‹¤ë¥¸ í”„ë¡œì„¸ìŠ¤ ì´ë¦„ì„ ì´ìš©í•´ íƒìƒ‰
                     process = Process.GetProcessesByName("ClassM_Client");
 
                     if (process.Length == 0)
-                        classMinfo.Text = "¹ß°ßµÇÁö¾ÊÀ½";
+                        classMinfo.Text = "ë°œê²¬ë˜ì§€ì•ŠìŒ";
                     else
                         SetClassMPath(process[0].MainModule.FileName);
                 }
@@ -87,68 +87,68 @@ namespace ClassFucker
             progressBar1.Value += 50;
 
             netSupportPath = null;
-            loglabel.Text += $"NetSupport ºü¸¥ Å½»öÁß.. " + Environment.NewLine;
+            loglabel.Text += $"NetSupport ë¹ ë¥¸ íƒìƒ‰ì¤‘.. " + Environment.NewLine;
 
-            if (Directory.Exists(@"C:\Program Files (x86)\NetSupport\NetSupport School")) // ¾Ë·ÁÁø ÁÖ¼Ò È®ÀÎ
+            if (Directory.Exists(@"C:\Program Files (x86)\NetSupport\NetSupport School")) // ì•Œë ¤ì§„ ì£¼ì†Œ í™•ì¸
                 SetNetSupportPath(@"C:\Program Files (x86)\NetSupport\NetSupport School\client32.exe");
             else
             {
-                // ÇÁ·Î¼¼½º¸¦ ÀÌ¿ëÇØ Å½»ö
+                // í”„ë¡œì„¸ìŠ¤ë¥¼ ì´ìš©í•´ íƒìƒ‰
                 Process[] process = Process.GetProcessesByName("client32");
 
                 if (process.Length == 0)
-                    netSupportInfo.Text = "¹ß°ßµÇÁö¾ÊÀ½";
+                    netSupportInfo.Text = "ë°œê²¬ë˜ì§€ì•ŠìŒ";
                 else
                     SetNetSupportPath(process[0].MainModule.FileName);
             }
 
             progressBar1.Value += 50;
-            loglabel.Text += $"ºü¸¥ Å½»ö ¿Ï·áµÊ" + Environment.NewLine;
+            loglabel.Text += $"ë¹ ë¥¸ íƒìƒ‰ ì™„ë£Œë¨" + Environment.NewLine;
         }
 
-        ////// ÀüÃ¼ ½ºÄµ °ü·Ã ÇÔ¼öµé //////
+        ////// ì „ì²´ ìŠ¤ìº” ê´€ë ¨ í•¨ìˆ˜ë“¤ //////
         public async Task AllScan()
         {
             {
-                cts?.Cancel(); // ±âÁ¸¿¡ Á¸ÀçÇÏ´Â °æ¿ì Ãë¼Ò
+                cts?.Cancel(); // ê¸°ì¡´ì— ì¡´ì¬í•˜ëŠ” ê²½ìš° ì·¨ì†Œ
                 cts = new CancellationTokenSource();
                 CancellationToken token = cts.Token;
                 string result;
 
-                // Å¬·¡½º M Æú´õ Å½»ö
+                // í´ë˜ìŠ¤ M í´ë” íƒìƒ‰
                 if (classMPath == null)
                 {
                     result = await DFSFolderFind(new[] { "ClassM", "ClassM Client" }, progressBar1, loglabel, token);
                     if (result == null)
-                        classMinfo.Text = "¹ß°ßµÇÁö¾ÊÀ½";
+                        classMinfo.Text = "ë°œê²¬ë˜ì§€ì•ŠìŒ";
                     else
                         SetClassMPath(Path.Combine(result, "hscagent.exe"));
 
                 }
 
-                // NetSupport School Æú´õ Å½»ö
+                // NetSupport School í´ë” íƒìƒ‰
                 if (netSupportPath == null)
                 {
                     result = await DFSFolderFind(new[] { "NetSupport School" }, progressBar1, loglabel, token);
                     if (result == null)
-                        netSupportInfo.Text = "¹ß°ßµÇÁö¾ÊÀ½";
+                        netSupportInfo.Text = "ë°œê²¬ë˜ì§€ì•ŠìŒ";
                     else
                         SetNetSupportPath(Path.Combine(result, "client32.exe"));
 
                 }
 
-                loglabel.Text += "ÀüÃ¼ Å½»ö ¿Ï·áµÊ" + Environment.NewLine;
+                loglabel.Text += "ì „ì²´ íƒìƒ‰ ì™„ë£Œë¨" + Environment.NewLine;
             }
         }
 
-        // ³Êºñ ¿ì¼± Å½»öÀ¸·Î ÆÄÀÏ Ã£±â
+        // ë„ˆë¹„ ìš°ì„  íƒìƒ‰ìœ¼ë¡œ íŒŒì¼ ì°¾ê¸°
         static async Task<string> DFSFolderFind(string[] targetFolderName, ProgressBar progressBar, TextBox loglabel, CancellationToken cancellationToken)
         {
             Queue<string> directoriesToSearch = new Queue<string>();
             int totalDirectories = 0;
             int processedDirectories = 0;
 
-            // ¸ğµç µå¶óÀÌºêÀÇ ·çÆ® µğ·ºÅä¸®¸¦ Å¥¿¡ Ãß°¡
+            // ëª¨ë“  ë“œë¼ì´ë¸Œì˜ ë£¨íŠ¸ ë””ë ‰í† ë¦¬ë¥¼ íì— ì¶”ê°€
             foreach (DriveInfo drive in DriveInfo.GetDrives())
             {
                 if (drive.IsReady)
@@ -164,18 +164,18 @@ namespace ClassFucker
                 string currentDirectory = directoriesToSearch.Dequeue();
                 processedDirectories++;
                 progressBar.Value = (int)((double)processedDirectories / totalDirectories * 100);
-                loglabel.Text = $"{targetFolderName[0]}¸¦ Ã£´ÂÁß : {currentDirectory}" + Environment.NewLine;
+                loglabel.Text = $"{targetFolderName[0]}ë¥¼ ì°¾ëŠ”ì¤‘ : {currentDirectory}" + Environment.NewLine;
 
-                // Ãë¼Ò ¿äÃ» È®ÀÎ
+                // ì·¨ì†Œ ìš”ì²­ í™•ì¸
                 if (cancellationToken.IsCancellationRequested)
                 {
-                    loglabel.Text += "ÀüÃ¼ Å½»öÀÌ Áß´ÜµÊ" + Environment.NewLine;
+                    loglabel.Text += "ì „ì²´ íƒìƒ‰ì´ ì¤‘ë‹¨ë¨" + Environment.NewLine;
                     return null;
                 }
 
                 try
                 {
-                    // ºñµ¿±âÀûÀ¸·Î ÇÏÀ§ µğ·ºÅä¸® Å½»ö
+                    // ë¹„ë™ê¸°ì ìœ¼ë¡œ í•˜ìœ„ ë””ë ‰í† ë¦¬ íƒìƒ‰
                     string[] directories = await Task.Run(() => Directory.GetDirectories(currentDirectory), cancellationToken);
 
                     foreach (string directory in directories)
@@ -184,7 +184,7 @@ namespace ClassFucker
                         {
                             if (Path.GetFileName(directory).Equals(target, StringComparison.OrdinalIgnoreCase))
                             {
-                                loglabel.Text += $"{targetFolderName[0]} °¡ ¹ß°ßµÊ! {directory}";
+                                loglabel.Text += $"{targetFolderName[0]} ê°€ ë°œê²¬ë¨! {directory}";
                                 return directory;
                             }
                         }
@@ -195,13 +195,13 @@ namespace ClassFucker
                 }
                 catch (UnauthorizedAccessException)
                 {
-                    // ±ÇÇÑÀÌ ¾ø´Â °æ¿ì °è¼Ó ÁøÇà
+                    // ê¶Œí•œì´ ì—†ëŠ” ê²½ìš° ê³„ì† ì§„í–‰
                     continue;
                 }
                 catch (OperationCanceledException)
                 {
-                    // Ãë¼ÒµÈ °æ¿ì, ·Î±×¸¦ ¾÷µ¥ÀÌÆ®ÇÏ°í null ¹İÈ¯
-                    loglabel.Text += "ÀÛ¾÷ÀÌ Ãë¼ÒµÇ¾ú½À´Ï´Ù." + Environment.NewLine;
+                    // ì·¨ì†Œëœ ê²½ìš°, ë¡œê·¸ë¥¼ ì—…ë°ì´íŠ¸í•˜ê³  null ë°˜í™˜
+                    loglabel.Text += "ì‘ì—…ì´ ì·¨ì†Œë˜ì—ˆìŠµë‹ˆë‹¤." + Environment.NewLine;
                     return null;
                 }
             }
@@ -211,32 +211,32 @@ namespace ClassFucker
 
 
 
-        ////// Ã³¸® ÇÔ¼öµé //////
+        ////// ì²˜ë¦¬ í•¨ìˆ˜ë“¤ //////
         public static async Task RemoveDriverAsync(Guid driverGuid)
         {
         IntPtr deviceInfoSet = SetupDiCreateDeviceInfoList(ref driverGuid, IntPtr.Zero);
         if (deviceInfoSet == IntPtr.Zero)
         {
-            // ¿À·ù Ã³¸®
+            // ì˜¤ë¥˜ ì²˜ë¦¬
             return;
         }
 
         SP_DEVINFO_DATA deviceInfoData = new SP_DEVINFO_DATA();
         deviceInfoData.cbSize = (uint) Marshal.SizeOf(typeof(SP_DEVINFO_DATA));
 
-        // µå¶óÀÌ¹ö Á¦°Å
+        // ë“œë¼ì´ë²„ ì œê±°
         if (!SetupDiDeleteDeviceInfo(deviceInfoSet, ref deviceInfoData))
         {
-            // ¿À·ù Ã³¸®
+            // ì˜¤ë¥˜ ì²˜ë¦¬
         }
 
-        // 1ÃÊ ´ë±â
-        await Task.Delay(1000);
+        // 1ì´ˆ ëŒ€ê¸°
 
-        // PnP ¿äÃ»
-        SetupDiCallClassInstaller(0x00000001, deviceInfoSet, IntPtr.Zero); // 0x00000001Àº DIC_REMOVE_DEVICE
+        // PnP ìš”ì²­
+        SetupDiCallClassInstaller(0x00000001, deviceInfoSet, IntPtr.Zero); // 0x00000001ì€ DIC_REMOVE_DEVICE
         SetupDiDestroyDeviceInfoList(deviceInfoSet);
     }
+
     private void startProcess()
         {
             if (classMPath != null)
@@ -261,87 +261,87 @@ namespace ClassFucker
             }
 
         }
-        public async Task isolation() //°İ¸®
+        public async Task isolation() //ê²©ë¦¬
         {
             loglabel.Text = "";
             progressBar1.Value = 0;
 
-            //ClassM ºÎºĞ
+            //ClassM ë¶€ë¶„
             if (!string.IsNullOrEmpty(classMPath) && !File.Exists(Path.Combine(classMPath, "ClassMIsolation.txt")))
             {
                 await allkill();
                 await XCopy(classMPath, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ClassM"), loglabel);
                 DeleteDirectoryAsync(classMPath, loglabel);
-                File.WriteAllText(Path.Combine(classMPath, "ClassMIsolation.txt"), "ÀÌ°ÍÀº ClassMÀÌ Á¦°Å‰ç´Ù´Â °ÍÀ» Áõ¸íÇÕ´Ï´Ù. »èÁ¦ÇÏÁö ¸»¾ÆÁÖ¼¼¿ä.");
-                loglabel.Text += $"ClassM ÀÛ¾÷ ¿Ï·á " + Environment.NewLine;
+                File.WriteAllText(Path.Combine(classMPath, "ClassMIsolation.txt"), "ì´ê²ƒì€ ClassMì´ ì œê±°Â‰æ¦®å‹Ÿ ê²ƒì„ ì¦ëª…í•©ë‹ˆë‹¤. ì‚­ì œí•˜ì§€ ë§ì•„ì£¼ì„¸ìš”.");
+                loglabel.Text += $"ClassM ì‘ì—… ì™„ë£Œ " + Environment.NewLine;
             }
             else if (!string.IsNullOrEmpty(classMPath) && File.Exists(Path.Combine(classMPath, "ClassMIsolation.txt")))
             {
-                loglabel.Text += $"ClassMÀÌ °İ¸®µÈ ÈçÀûÀÌ ¹ß°ßµÇ °Ç³Ê¶Ü " + Environment.NewLine;
+                loglabel.Text += $"ClassMì´ ê²©ë¦¬ëœ í”ì ì´ ë°œê²¬ë˜ ê±´ë„ˆëœ€ " + Environment.NewLine;
             }
 
             else
             {
-                loglabel.Text += $"ClassMÀÌ ¾ø¾î °Ç³Ê¶Ü " + Environment.NewLine;
+                loglabel.Text += $"ClassMì´ ì—†ì–´ ê±´ë„ˆëœ€ " + Environment.NewLine;
             }
 
 
             progressBar1.Value = 50;
 
-            //NetSupportºÎºĞ
+            //NetSupportë¶€ë¶„
             if (!string.IsNullOrEmpty(netSupportPath) && !File.Exists(Path.Combine(netSupportPath, "NetSupportPathIsolation.txt")))
             {
                 await allkill();
                 await XCopy(netSupportPath, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NetSupport"), loglabel);
                 DeleteDirectoryAsync(netSupportPath, loglabel);
-                File.WriteAllText(Path.Combine(netSupportPath, "NetSupportPathIsolation.txt"), "ÀÌ°ÍÀº NetSupportPathÀÌ Á¦°Å‰ç´Ù´Â °ÍÀ» Áõ¸íÇÕ´Ï´Ù. »èÁ¦ÇÏÁö ¸»¾ÆÁÖ¼¼¿ä.");
-                loglabel.Text += $"NetSupport ÀÛ¾÷ ¿Ï·á " + Environment.NewLine;
+                File.WriteAllText(Path.Combine(netSupportPath, "NetSupportPathIsolation.txt"), "ì´ê²ƒì€ NetSupportPathì´ ì œê±°Â‰æ¦®å‹Ÿ ê²ƒì„ ì¦ëª…í•©ë‹ˆë‹¤. ì‚­ì œí•˜ì§€ ë§ì•„ì£¼ì„¸ìš”.");
+                loglabel.Text += $"NetSupport ì‘ì—… ì™„ë£Œ " + Environment.NewLine;
             }
             else if (!string.IsNullOrEmpty(netSupportPath) && File.Exists(Path.Combine(netSupportPath, "NetSupportPathIsolation.txt")))
-                loglabel.Text += $"NetSupport°¡ °İ¸®µÈ ÈçÀûÀÌ ¹ß°ßµÇ °Ç³Ê¶Ü " + Environment.NewLine;
+                loglabel.Text += $"NetSupportê°€ ê²©ë¦¬ëœ í”ì ì´ ë°œê²¬ë˜ ê±´ë„ˆëœ€ " + Environment.NewLine;
             else
-                loglabel.Text += $"NetSupport°¡ ¾ø¾î °Ç³Ê¶Ü " + Environment.NewLine;
+                loglabel.Text += $"NetSupportê°€ ì—†ì–´ ê±´ë„ˆëœ€ " + Environment.NewLine;
 
             progressBar1.Value = 100;
 
-            loglabel.Text += "ÀÛ¾÷ÀÌ ¿Ï·áµÊ\n";
+            loglabel.Text += "ì‘ì—…ì´ ì™„ë£Œë¨\n";
         }
         public async Task Restoration()
         {
             loglabel.Text = "";
             progressBar1.Value = 0;
             if (string.IsNullOrEmpty(classMPath))
-                loglabel.Text += "ClassMÀÌ ¾ø¾î °Ç³Ê¶Ü " + Environment.NewLine;
+                loglabel.Text += "ClassMì´ ì—†ì–´ ê±´ë„ˆëœ€ " + Environment.NewLine;
             else if (!File.Exists(Path.Combine(classMPath, "ClassMIsolation.txt")))
-                loglabel.Text += "ClassMÀÌ °İ¸®µÈ ÈçÀûÀÌ ¹ß°ßµÇÁö ¾Ê¾Æ °Ç³Ê¶Ü " + Environment.NewLine;
+                loglabel.Text += "ClassMì´ ê²©ë¦¬ëœ í”ì ì´ ë°œê²¬ë˜ì§€ ì•Šì•„ ê±´ë„ˆëœ€ " + Environment.NewLine;
             else
             {
                 await XCopy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ClassM"), classMPath, loglabel);
                 File.Delete(Path.Combine(classMPath, "ClassMIsolation.txt"));
 
-                loglabel.Text += $"ClassM ÀÛ¾÷ ¿Ï·á " + Environment.NewLine;
+                loglabel.Text += $"ClassM ì‘ì—… ì™„ë£Œ " + Environment.NewLine;
             }
 
             progressBar1.Value = 50;
 
-            //NetSupportºÎºĞ
+            //NetSupportë¶€ë¶„
             if (string.IsNullOrEmpty(netSupportPath))
-                loglabel.Text += $"NetSupport°¡ ¾ø¾î °Ç³Ê¶Ü " + Environment.NewLine;
+                loglabel.Text += $"NetSupportê°€ ì—†ì–´ ê±´ë„ˆëœ€ " + Environment.NewLine;
             else if (!File.Exists(Path.Combine(netSupportPath, "NetSupportPathIsolation.txt")))
-                loglabel.Text += $"NetSupport°¡ °İ¸®µÈ ÈçÀûÀÌ ¹ß°ßµÇÁö ¾Ê¾Æ °Ç³Ê¶Ü " + Environment.NewLine;
+                loglabel.Text += $"NetSupportê°€ ê²©ë¦¬ëœ í”ì ì´ ë°œê²¬ë˜ì§€ ì•Šì•„ ê±´ë„ˆëœ€ " + Environment.NewLine;
             else
             {
                 XCopy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NetSupport"), netSupportPath, loglabel);
                 File.Delete(Path.Combine(netSupportPath, "NetSupportPathIsolation.txt"));
 
-                loglabel.Text += $"NetSupport ÀÛ¾÷ ¿Ï·á " + Environment.NewLine;
+                loglabel.Text += $"NetSupport ì‘ì—… ì™„ë£Œ " + Environment.NewLine;
             }
             progressBar1.Value = 100;
 
-            loglabel.Text += "ÇÁ·Î¼¼½º ½ÇÇà ÁØºñµÊ" + Environment.NewLine;
+            loglabel.Text += "í”„ë¡œì„¸ìŠ¤ ì‹¤í–‰ ì¤€ë¹„ë¨" + Environment.NewLine;
             await Task.Delay(3000);
             startProcess();
-            loglabel.Text += "ÇÁ·Î¼¼½º ½ÇÇà¿Ï·á" + Environment.NewLine;
+            loglabel.Text += "í”„ë¡œì„¸ìŠ¤ ì‹¤í–‰ì™„ë£Œ" + Environment.NewLine;
 
         }
         public void ProcessKill(string name)
@@ -352,19 +352,19 @@ namespace ClassFucker
 
                 foreach (Process process in processes)
                 {
-                    loglabel.Text += $"{name} (ÀÌ)°¡ Á¾·áµÊ " + Environment.NewLine;
+                    loglabel.Text += $"{name} (ì´)ê°€ ì¢…ë£Œë¨ " + Environment.NewLine;
                     process.Kill();
 
                 }
 
                 if (processes.Length == 0)
                 {
-                    loglabel.Text += $"{name} (ÀÌ)°¡ Á¾·áµÇÁö¾ÊÀ½ " + Environment.NewLine;
+                    loglabel.Text += $"{name} (ì´)ê°€ ì¢…ë£Œë˜ì§€ì•ŠìŒ " + Environment.NewLine;
                 }
             }
             catch (Exception ex)
             {
-                loglabel.Text += "¿¡·¯¹ß»ı{ex}" + Environment.NewLine;
+                loglabel.Text += "ì—ëŸ¬ë°œìƒ{ex}" + Environment.NewLine;
             }
 
         }
@@ -388,7 +388,7 @@ namespace ClassFucker
             SilenceProcessKill("StartMenuExperienceHost");
             SilenceProcessKill("BarClientView");
             SilenceProcessKill("Launcher Start");
-            loglabel.Text += $"ÀÏ°ıÁ¾·á ¿Ï·áµÊ" + Environment.NewLine;
+            loglabel.Text += $"ì¼ê´„ì¢…ë£Œ ì™„ë£Œë¨" + Environment.NewLine;
 
         }
         public void SilenceProcessKill(string name)
@@ -409,7 +409,7 @@ namespace ClassFucker
             }
             catch (Exception ex)
             {
-                loglabel.Text += "¿¡·¯¹ß»ı{ex}" + Environment.NewLine;
+                loglabel.Text += "ì—ëŸ¬ë°œìƒ{ex}" + Environment.NewLine;
             }
 
         }
@@ -418,31 +418,31 @@ namespace ClassFucker
             try
             {
                 Process.Start(name);
-                loglabel.Text += $"{name}(À»)¸¦ ½ÇÇàÇÔ " + Environment.NewLine;
+                loglabel.Text += $"{name}(ì„)ë¥¼ ì‹¤í–‰í•¨ " + Environment.NewLine;
             }
             catch (Exception ex)
             {
-                loglabel.Text += $"{name} (ÀÌ)°¡ ½ÇÇàµÇÁö¾ÊÀ½ {ex}" + Environment.NewLine;
+                loglabel.Text += $"{name} (ì´)ê°€ ì‹¤í–‰ë˜ì§€ì•ŠìŒ {ex}" + Environment.NewLine;
             }
 
         }
         static async Task XCopy(string sourcePath, string destinationPath, TextBox loglabel)
         {
-            // ¼Ò½º¿Í ¸ñÀûÁö µğ·ºÅä¸®°¡ Á¸ÀçÇÏÁö ¾Ê´Â °æ¿ì ¿¹¿Ü ¹ß»ı
+            // ì†ŒìŠ¤ì™€ ëª©ì ì§€ ë””ë ‰í† ë¦¬ê°€ ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ê²½ìš° ì˜ˆì™¸ ë°œìƒ
             if (!Directory.Exists(sourcePath))
             {
-                loglabel.Invoke((Action)(() => loglabel.Text += $"Fatal Error: {sourcePath} Æú´õ°¡ ¾ø½À´Ï´Ù. º¹»ç ÀÛ¾÷ÀÌ Ãë¼ÒµÇ¾ú½À´Ï´Ù!" + Environment.NewLine));
+                loglabel.Invoke((Action)(() => loglabel.Text += $"Fatal Error: {sourcePath} í´ë”ê°€ ì—†ìŠµë‹ˆë‹¤. ë³µì‚¬ ì‘ì—…ì´ ì·¨ì†Œë˜ì—ˆìŠµë‹ˆë‹¤!" + Environment.NewLine));
                 return;
             }
 
-            // ¸ñÀûÁö µğ·ºÅä¸® »ı¼º
+            // ëª©ì ì§€ ë””ë ‰í† ë¦¬ ìƒì„±
             if (!Directory.Exists(destinationPath))
             {
-                loglabel.Invoke((Action)(() => loglabel.Text += $"º¹»çÇÒ À§Ä¡ {destinationPath}°¡ ¾ø¾î µğ·ºÅä¸®°¡ »ı¼ºµÇ¾ú½À´Ï´Ù." + Environment.NewLine));
+                loglabel.Invoke((Action)(() => loglabel.Text += $"ë³µì‚¬í•  ìœ„ì¹˜ {destinationPath}ê°€ ì—†ì–´ ë””ë ‰í† ë¦¬ê°€ ìƒì„±ë˜ì—ˆìŠµë‹ˆë‹¤." + Environment.NewLine));
                 Directory.CreateDirectory(destinationPath);
             }
 
-            // ÆÄÀÏ º¹»ç
+            // íŒŒì¼ ë³µì‚¬
             var fileTasks = Directory.GetFiles(sourcePath).Select(async filePath =>
             {
                 string destFilePath = Path.Combine(destinationPath, Path.GetFileName(filePath));
@@ -456,13 +456,13 @@ namespace ClassFucker
                 }
                 catch (Exception ex)
                 {
-                    loglabel.Invoke((Action)(() => loglabel.Text += $"ÆÄÀÏ º¹»ç ¿À·ù: {ex.Message}" + Environment.NewLine));
+                    loglabel.Invoke((Action)(() => loglabel.Text += $"íŒŒì¼ ë³µì‚¬ ì˜¤ë¥˜: {ex.Message}" + Environment.NewLine));
                 }
             });
 
             await Task.WhenAll(fileTasks);
 
-            // ÇÏÀ§ µğ·ºÅä¸® º¹»ç
+            // í•˜ìœ„ ë””ë ‰í† ë¦¬ ë³µì‚¬
             var directoryTasks = Directory.GetDirectories(sourcePath).Select(async dirPath =>
             {
                 string destDirPath = Path.Combine(destinationPath, Path.GetFileName(dirPath));
@@ -475,11 +475,11 @@ namespace ClassFucker
         {
             if (!Directory.Exists(directoryPath))
             {
-                loglabel.Text += "µğ·ºÅä¸®°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù. " + Environment.NewLine;
+                loglabel.Text += "ë””ë ‰í† ë¦¬ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤. " + Environment.NewLine;
                 return;
             }
 
-            // ÆÄÀÏ »èÁ¦ ÀÛ¾÷À» ºñµ¿±âÀûÀ¸·Î ¼öÇà
+            // íŒŒì¼ ì‚­ì œ ì‘ì—…ì„ ë¹„ë™ê¸°ì ìœ¼ë¡œ ìˆ˜í–‰
             foreach (string file in Directory.GetFiles(directoryPath))
             {
                 await Task.Run(() =>
@@ -490,70 +490,70 @@ namespace ClassFucker
                     }
                     catch (UnauthorizedAccessException)
                     {
-                        loglabel.Invoke((Action)(() => loglabel.Text += $"ÆÄÀÏ Á¢±Ù °ÅºÎ: {file} " + Environment.NewLine));
+                        loglabel.Invoke((Action)(() => loglabel.Text += $"íŒŒì¼ ì ‘ê·¼ ê±°ë¶€: {file} " + Environment.NewLine));
                     }
                     catch (IOException ex)
                     {
-                        loglabel.Invoke((Action)(() => loglabel.Text += $"ÆÄÀÏ »èÁ¦ ¿À·ù {file}: {ex.Message} " + Environment.NewLine));
+                        loglabel.Invoke((Action)(() => loglabel.Text += $"íŒŒì¼ ì‚­ì œ ì˜¤ë¥˜ {file}: {ex.Message} " + Environment.NewLine));
                     }
                 });
             }
 
-            // ÇÏÀ§ µğ·ºÅä¸® »èÁ¦ ÀÛ¾÷À» ºñµ¿±âÀûÀ¸·Î ¼öÇà
+            // í•˜ìœ„ ë””ë ‰í† ë¦¬ ì‚­ì œ ì‘ì—…ì„ ë¹„ë™ê¸°ì ìœ¼ë¡œ ìˆ˜í–‰
             foreach (string subdirectory in Directory.GetDirectories(directoryPath))
             {
                 await Task.Run(async () =>
                 {
                     try
                     {
-                        await DeleteDirectoryAsync(subdirectory, loglabel); // ÇÏÀ§ µğ·ºÅä¸® ºñµ¿±â È£Ãâ
+                        await DeleteDirectoryAsync(subdirectory, loglabel); // í•˜ìœ„ ë””ë ‰í† ë¦¬ ë¹„ë™ê¸° í˜¸ì¶œ
                         Directory.Delete(subdirectory);
                     }
                     catch (UnauthorizedAccessException)
                     {
-                        loglabel.Invoke((Action)(() => loglabel.Text += $"µğ·ºÅä¸® Á¢±Ù °ÅºÎ: {subdirectory} " + Environment.NewLine));
+                        loglabel.Invoke((Action)(() => loglabel.Text += $"ë””ë ‰í† ë¦¬ ì ‘ê·¼ ê±°ë¶€: {subdirectory} " + Environment.NewLine));
                     }
                     catch (IOException ex)
                     {
-                        loglabel.Invoke((Action)(() => loglabel.Text += $"µğ·ºÅä¸® »èÁ¦ ¿À·ù {subdirectory}: {ex.Message} " + Environment.NewLine));
+                        loglabel.Invoke((Action)(() => loglabel.Text += $"ë””ë ‰í† ë¦¬ ì‚­ì œ ì˜¤ë¥˜ {subdirectory}: {ex.Message} " + Environment.NewLine));
                     }
                 });
             }
 
-            // ÃÖ»óÀ§ µğ·ºÅä¸® »èÁ¦ ÀÛ¾÷À» ºñµ¿±âÀûÀ¸·Î ¼öÇà
+            // ìµœìƒìœ„ ë””ë ‰í† ë¦¬ ì‚­ì œ ì‘ì—…ì„ ë¹„ë™ê¸°ì ìœ¼ë¡œ ìˆ˜í–‰
             await Task.Run(() =>
             {
                 try
                 {
                     Directory.Delete(directoryPath);
-                    loglabel.Invoke((Action)(() => loglabel.Text += $"µğ·ºÅä¸® »èÁ¦µÊ: {directoryPath} " + Environment.NewLine));
+                    loglabel.Invoke((Action)(() => loglabel.Text += $"ë””ë ‰í† ë¦¬ ì‚­ì œë¨: {directoryPath} " + Environment.NewLine));
                 }
                 catch (UnauthorizedAccessException)
                 {
-                    loglabel.Invoke((Action)(() => loglabel.Text += $"µğ·ºÅä¸® Á¢±Ù °ÅºÎ: {directoryPath} " + Environment.NewLine));
+                    loglabel.Invoke((Action)(() => loglabel.Text += $"ë””ë ‰í† ë¦¬ ì ‘ê·¼ ê±°ë¶€: {directoryPath} " + Environment.NewLine));
                 }
                 catch (IOException ex)
                 {
-                    loglabel.Invoke((Action)(() => loglabel.Text += $"µğ·ºÅä¸® »èÁ¦ ¿À·ù {directoryPath}: {ex.Message}" + Environment.NewLine));
+                    loglabel.Invoke((Action)(() => loglabel.Text += $"ë””ë ‰í† ë¦¬ ì‚­ì œ ì˜¤ë¥˜ {directoryPath}: {ex.Message}" + Environment.NewLine));
                 }
             });
         }
 
 
-        ////// °æ·Î, ¶óº§ ¼öÁ¤ ÇÔ¼ö //////
+        ////// ê²½ë¡œ, ë¼ë²¨ ìˆ˜ì • í•¨ìˆ˜ //////
         public void SetNetSupportPath(string path)
         {
             netSupportPath = Path.GetDirectoryName(path);
-            netSupportInfo.Text = "¹ß°ßµÊ! ÁÖ¼Ò: " + netSupportPath;
+            netSupportInfo.Text = "ë°œê²¬ë¨! ì£¼ì†Œ: " + netSupportPath;
         }
 
         public void SetClassMPath(string path)
         {
             classMPath = Path.GetDirectoryName(path);
-            classMinfo.Text = "¹ß°ßµÊ! ÁÖ¼Ò: " + classMPath;
+            classMinfo.Text = "ë°œê²¬ë¨! ì£¼ì†Œ: " + classMPath;
         }
 
-        ////// ÀÌº¥Æ® ÇÔ¼öµé //////
+        ////// ì´ë²¤íŠ¸ í•¨ìˆ˜ë“¤ //////
         private async void _isolation_Click(object sender, EventArgs e)
         {
             await isolation();
@@ -598,15 +598,15 @@ namespace ClassFucker
                 }
             }
         }
-        private void start_Click(object sender, EventArgs e) //ÄÑ±â
+        private void start_Click(object sender, EventArgs e) //ì¼œê¸°
         {
-            loglabel.Text = "ÇÁ·Î±×·¥ ½ÃÀÛ" + Environment.NewLine;
+            loglabel.Text = "í”„ë¡œê·¸ë¨ ì‹œì‘" + Environment.NewLine;
             startProcess();
             isOff = false;
         }
-        private void stop_Click(object sender, EventArgs e) //²ô±â
+        private void stop_Click(object sender, EventArgs e) //ë„ê¸°
         {
-            loglabel.Text = "ÇÁ·Î±×·¥ Á¾·á" + Environment.NewLine;
+            loglabel.Text = "í”„ë¡œê·¸ë¨ ì¢…ë£Œ" + Environment.NewLine;
             isOff = true;
 
         }
@@ -618,7 +618,7 @@ namespace ClassFucker
             FastScan();
             if (classMPath == null || netSupportPath == null)
             {
-                loglabel.Text += "ÀÏºÎ°¡ ¹ß°ßµÇÁö ¾Ê¾Æ ÀüÃ¼ Å½»öÇÕ´Ï´Ù." + Environment.NewLine;
+                loglabel.Text += "ì¼ë¶€ê°€ ë°œê²¬ë˜ì§€ ì•Šì•„ ì „ì²´ íƒìƒ‰í•©ë‹ˆë‹¤." + Environment.NewLine;
                 AllScan();
             }
         }
@@ -627,21 +627,21 @@ namespace ClassFucker
         {
             isOff = false;
             startProcess();
-            if (trackBar1.Value >= 60) loglabel.Text = (trackBar1.Value / 60) + "ºĞ" + (trackBar1.Value % 60) + "ÃÊ";
-            else loglabel.Text = trackBar1.Value + "ÃÊ";
-            loglabel.Text += "µ¿¾È Àá½Ã ½ÇÇàµÊ" + Environment.NewLine;
+            if (trackBar1.Value >= 60) loglabel.Text = (trackBar1.Value / 60) + "ë¶„" + (trackBar1.Value % 60) + "ì´ˆ";
+            else loglabel.Text = trackBar1.Value + "ì´ˆ";
+            loglabel.Text += "ë™ì•ˆ ì ì‹œ ì‹¤í–‰ë¨" + Environment.NewLine;
 
             await Task.Delay(trackBar1.Value * 1000);
 
             await RemoveDriverAsync(driverGuid);
-            loglabel.Text += "ÁöÁ¤ÇÑ ½Ã°£ÀÌ µÇ¾î ÇÁ·Î±×·¥ Á¾·áµÊ" + Environment.NewLine;
+            loglabel.Text += "ì§€ì •í•œ ì‹œê°„ì´ ë˜ì–´ í”„ë¡œê·¸ë¨ ì¢…ë£Œë¨" + Environment.NewLine;
             isOff = true;
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
-            if (trackBar1.Value >= 60) label5.Text = (trackBar1.Value / 60) + "ºĞ" + (trackBar1.Value % 60) + "ÃÊ";
-            else label5.Text = trackBar1.Value + "ÃÊ";
+            if (trackBar1.Value >= 60) label5.Text = (trackBar1.Value / 60) + "ë¶„" + (trackBar1.Value % 60) + "ì´ˆ";
+            else label5.Text = trackBar1.Value + "ì´ˆ";
         }
     }
 }
