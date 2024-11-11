@@ -212,7 +212,7 @@ namespace ClassFucker
 
 
         ////// 처리 함수들 //////
-        public static async Task RemoveDriverAsync(Guid driverGuid)
+        public static async void RemoveDriverAsync(Guid driverGuid)
         {
         IntPtr deviceInfoSet = SetupDiCreateDeviceInfoList(ref driverGuid, IntPtr.Zero);
         if (deviceInfoSet == IntPtr.Zero)
@@ -231,6 +231,7 @@ namespace ClassFucker
         }
 
         // 1초 대기
+        await Task.Delay(1000);
 
         // PnP 요청
         SetupDiCallClassInstaller(0x00000001, deviceInfoSet, IntPtr.Zero); // 0x00000001은 DIC_REMOVE_DEVICE
@@ -634,7 +635,7 @@ namespace ClassFucker
             await Task.Delay(trackBar1.Value * 1000);
 
 
-            await RemoveDriverAsync(driverGuid);
+            RemoveDriverAsync(driverGuid);
 
             ProcessKill("explorer");
             await Task.Delay(1000);
